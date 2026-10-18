@@ -2,6 +2,8 @@
 
 本仓库独立维护译文（translate）与随手记（quick-notes），宿主不携带插件，也不依赖本仓库构建。当前公开版本为 0.1.2，包名为 `@semicoder/fn-plugin-translate` 和 `@semicoder/fn-example-quick-notes`；清单字段为 `fn`，sdkVersion 保持 0.3。
 
+另有本地开发中的[网络搜索](plugins/web-search/README.md) `web-search` 0.1.0，基于宿主 Agent loop 并接入 fn Chat。仅该插件使用 `vendor/agent-sdk.tgz` 固定开发归档；公开宿主/SDK 尚不支持，未加入正式市场。check/test/pack 包含该插件，生成的 `artifacts/web-search-0.1.0.tgz` 可在兼容开发宿主中手动安装。
+
 ## 独立开发
 
 使用 Bun 1.4.3，根包与两个插件均固定消费公开 `@semicoder/fn-sdk@0.3.4`，不依赖相邻宿主源码。[vendor 快照](vendor/README.md)仅保留更名阶段历史，不参与当前安装。

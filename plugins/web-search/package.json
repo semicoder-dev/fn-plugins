@@ -1,0 +1,24 @@
+{
+  "name": "@semicoder/fn-plugin-web-search",
+  "version": "0.1.0",
+  "private": true,
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "devDependencies": {
+    "@semicoder/fn-sdk": "file:../../vendor/agent-sdk.tgz"
+  },
+  "fn": {
+    "schemaVersion": 1,
+    "id": "web-search",
+    "name": "网络搜索",
+    "description": "搜索网页、阅读来源并总结答案，可在 fn Chat 中继续追问。",
+    "icon": "搜",
+    "color": "#477b70",
+    "sdkVersion": "0.3",
+    "frontend": "dist/client.js",
+    "backend": "dist/backend.js",
+    "styles": "dist/client.css"
+  }
+}

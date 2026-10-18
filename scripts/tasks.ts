@@ -3,8 +3,9 @@ import { createHash } from "node:crypto";
 import { checkPlugin, buildCheckedPlugin, packPlugin } from "@semicoder/fn-sdk/plugin";
 const action = process.argv[2];
 const selected = process.argv[3];
-const ids = selected ? [selected] : ["translate", "quick-notes"];
-if (!ids.every(id => ["translate", "quick-notes"].includes(id))) throw new Error("未知插件 ID");
+const available = ["translate", "quick-notes", "web-search"];
+const ids = selected ? [selected] : available;
+if (!ids.every(id => available.includes(id))) throw new Error("未知插件 ID");
 for (const id of ids) {
   const root = `plugins/${id}`;
   if (action === "check") await checkPlugin(root);

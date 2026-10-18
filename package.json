@@ -9,7 +9,7 @@
     "check": "bun node_modules/typescript/bin/tsc --noEmit && bun scripts/tasks.ts check",
     "build": "bun scripts/tasks.ts build",
     "pack": "bun scripts/tasks.ts pack",
-    "test": "bun test tests",
+    "test": "bun test ./tests ./plugins/web-search/tests",
     "index:check": "bun scripts/catalog.ts check"
   },
   "devDependencies": {

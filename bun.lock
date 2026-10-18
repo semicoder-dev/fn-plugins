@@ -29,6 +29,13 @@
         "@semicoder/fn-sdk": "0.3.4",
       },
     },
+    "plugins/web-search": {
+      "name": "@semicoder/fn-plugin-web-search",
+      "version": "0.1.0",
+      "devDependencies": {
+        "@semicoder/fn-sdk": "file:../../vendor/agent-sdk.tgz",
+      },
+    },
   },
   "packages": {
     "@alloc/quick-lru": ["@alloc/quick-lru@5.3.0", "", {}, "sha512-U4+70Pc5ZS9osnCBCE5Jha/ciHM+Yp+CNMNC/7HvYbNRk1Ldd+f7qO65W5qfhu/TCv+/ozljlXXe9Nj8419DMA=="],
@@ -164,6 +171,8 @@
     "@semicoder/fn-example-quick-notes": ["@semicoder/fn-example-quick-notes@workspace:plugins/quick-notes"],
 
     "@semicoder/fn-plugin-translate": ["@semicoder/fn-plugin-translate@workspace:plugins/translate"],
+
+    "@semicoder/fn-plugin-web-search": ["@semicoder/fn-plugin-web-search@workspace:plugins/web-search"],
 
     "@semicoder/fn-sdk": ["@semicoder/fn-sdk@0.3.4", "", { "dependencies": { "@base-ui/react": "^1.9.0", "@tailwindcss/postcss": "^4.3.3", "lucide-react": "^1.55.0", "postcss": "^8.5.28", "postcss-selector-parser": "^7.1.6", "postcss-value-parser": "^4.2.0", "tailwindcss": "^4.3.3", "zod": "4.6.5" }, "peerDependencies": { "react": ">=19 <20", "react-dom": ">=19 <20" } }, "sha512-Z2ZPQ6xT32hp+Ph8+bfSy5Ot9K0Gje1aULA1yIkrzncsmunc+Tnd1W1mcxNnCF00tNbjGxYNcHiEFf2Q0yTlzQ=="],
 
@@ -336,6 +345,8 @@
     "vite": ["vite@7.1.3", "", { "dependencies": { "esbuild": "^0.25.0", "fdir": "^6.5.0", "picomatch": "^4.0.3", "postcss": "^8.5.6", "rollup": "^4.43.0", "tinyglobby": "^0.2.14" }, "optionalDependencies": { "fsevents": "~2.3.3" }, "peerDependencies": { "@types/node": "^20.19.0 || >=22.12.0", "jiti": ">=1.21.0", "less": "^4.0.0", "lightningcss": "^1.21.0", "sass": "^1.70.0", "sass-embedded": "^1.70.0", "stylus": ">=0.54.8", "sugarss": "^5.0.0", "terser": "^5.16.0", "tsx": "^4.8.1", "yaml": "^2.4.2" }, "optionalPeers": ["@types/node", "jiti", "less", "lightningcss", "sass", "sass-embedded", "stylus", "sugarss", "terser", "tsx", "yaml"], "bin": { "vite": "bin/vite.js" } }, "sha512-OOUi5zjkDxYrKhTV3V7iKsoS37VUM7v40+HuwEmcrsf11Cdx9y3DIr2Px6liIcZFwt3XSRpQvFpL3WVy7ApkGw=="],
 
     "zod": ["zod@4.6.5", "", {}, "sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q=="],
+
+    "@semicoder/fn-plugin-web-search/@semicoder/fn-sdk": ["@semicoder/fn-sdk@../../vendor/agent-sdk.tgz", { "dependencies": { "@base-ui/react": "^1.9.0", "@tailwindcss/postcss": "^4.3.3", "lucide-react": "^1.55.0", "postcss": "^8.5.28", "postcss-selector-parser": "^7.1.6", "postcss-value-parser": "^4.2.0", "tailwindcss": "^4.3.3", "zod": "4.6.5" }, "peerDependencies": { "react": ">=19 <20", "react-dom": ">=19 <20" } }, "sha512-CxHMbs3RTlqIy7fBSxm4dJCgxpn/+Hhh/BsiKH8Gu5gfrEDOmyPzV+1XuaREZyXRjH/vMNKdSOZtqVGved1hBA=="],
 
     "@tailwindcss/oxide-wasm32-wasi/@emnapi/core": ["@emnapi/core@1.11.3", "", { "dependencies": { "@emnapi/wasi-threads": "1.2.3", "tslib": "^2.4.0" }, "bundled": true }, "sha512-zLpS5asjEb7lq8jYLq37N6XKaE41DIexlY1rF/z4/tIl3wo13Sqm28fRyfIsKZD+NZ8mM5RoKkpW/rBcuoSZSg=="],
 
