@@ -19,6 +19,7 @@
     "sdkVersion": "0.3",
     "frontend": "dist/client.js",
     "backend": "dist/backend.js",
-    "styles": "dist/client.css"
+    "styles": "dist/client.css",
+    "iconSvg": "dist/icon.svg"
   }
 }

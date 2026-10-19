@@ -1,9 +1,11 @@
 import { createHash } from "node:crypto";
 import { z } from "@semicoder/fn-sdk/runtime";
+import { iconSvgSchema } from "@semicoder/fn-sdk/manifest";
 export const entrySchema = z.strictObject({
   id: z.string().regex(/^[a-z][a-z0-9-]{1,63}$/).refine(id => !["models", "plugins", "settings"].includes(id)),
   packageName: z.string().max(214).regex(/^(?:@[a-z0-9._-]+\/)?[a-z0-9][a-z0-9._-]*$/),
   name: z.string().trim().min(1).max(100), description: z.string().max(1000), icon: z.string().min(1).max(16), color: z.string().regex(/^#[0-9a-fA-F]{6}$/),
+  iconSvg: iconSvgSchema.optional(),
   version: z.string().regex(/^(0|[1-9]\d{0,8})\.(0|[1-9]\d{0,8})\.(0|[1-9]\d{0,8})$/), sdkVersion: z.string().max(20),
   url: z.string().max(2000).url().refine(value => { const url = new URL(value); return url.protocol === "https:" && !url.username && !url.password && !url.hash; }), sha256: z.string().regex(/^[a-f0-9]{64}$/),
 });

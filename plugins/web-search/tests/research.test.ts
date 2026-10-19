@@ -197,7 +197,7 @@ function fixture() {
   };
 }
 
-test("fixed development SDK has provenance and is isolated from published plugins", async () => {
+test("fixed development SDK has provenance and the search plugin stays outside the published market", async () => {
   const snapshot = await Bun.file("vendor/agent-sdk.json").json();
   expect(
     createHash("sha256")

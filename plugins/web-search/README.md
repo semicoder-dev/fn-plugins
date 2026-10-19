@@ -16,7 +16,7 @@ bun run index:check
 
 生成 `artifacts/web-search-0.1.0.tgz`。在包含 Agent loop 与 fn Chat v2 的开发宿主中，打开「应用中心 → 从地址安装 → 选择本地包」安装该归档。安装任务成功后出现「网络搜索」页面。
 
-本插件单独消费 `vendor/agent-sdk.tgz`，来源和 SHA-256 见 `vendor/agent-sdk.json`。归档自包含，不依赖相邻宿主源码；两个已发布插件仍使用公开 SDK 0.3.4。首次公开发行前需切换已验收的公开 SDK、补齐发行流程并验证真实模型与 Chat 客户端，不能直接上架本地候选条目。
+当前三个开发插件及根构建工具统一消费 `vendor/agent-sdk.tgz`，来源和 SHA-256 见 `vendor/agent-sdk.json`。归档包含 SVG 图标、Agent/Chat，自包含且不依赖相邻宿主源码；两个已发布的 0.1.2 归档仍使用公开 SDK 0.3.4。首次公开发行前需切换已验收的公开 SDK、补齐发行流程并验证真实模型与 Chat 客户端，不能直接上架本地候选条目。
 
 ## 页面使用
 

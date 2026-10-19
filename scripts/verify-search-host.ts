@@ -209,7 +209,8 @@ try {
     () => plugins.listJobs().find((j: any) => j.id === job.id)?.status !== "installing",
     "archive installation",
   );
-  assert.equal(plugins.listJobs().find((j: any) => j.id === job.id)?.status, "completed");
+  const installation = plugins.listJobs().find((j: any) => j.id === job.id);
+  assert.equal(installation?.status, "completed", installation?.message);
   assert.equal(plugins.list()[0].status, "active");
   assert.equal(plugins.chatCatalog()[0].pluginId, pluginId);
   await transport.commit([

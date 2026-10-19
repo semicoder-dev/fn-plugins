@@ -7,7 +7,7 @@
   ],
   "type": "module",
   "devDependencies": {
-    "@semicoder/fn-sdk": "0.3.4"
+    "@semicoder/fn-sdk": "file:../../vendor/agent-sdk.tgz"
   },
   "fn": {
     "schemaVersion": 1,
@@ -20,6 +20,7 @@
     "frontend": "dist/client.js",
     "backend": "dist/backend.js",
     "keepAlive": true,
-    "styles": "dist/client.css"
+    "styles": "dist/client.css",
+    "iconSvg": "dist/icon.svg"
   }
 }

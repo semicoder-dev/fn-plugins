@@ -2,11 +2,11 @@
 
 本仓库独立维护译文（translate）与随手记（quick-notes），宿主不携带插件，也不依赖本仓库构建。当前公开版本为 0.1.2，包名为 `@semicoder/fn-plugin-translate` 和 `@semicoder/fn-example-quick-notes`；清单字段为 `fn`，sdkVersion 保持 0.3。
 
-另有本地开发中的[网络搜索](plugins/web-search/README.md) `web-search` 0.1.0，基于宿主 Agent loop 并接入 fn Chat。仅该插件使用 `vendor/agent-sdk.tgz` 固定开发归档；公开宿主/SDK 尚不支持，未加入正式市场。check/test/pack 包含该插件，生成的 `artifacts/web-search-0.1.0.tgz` 可在兼容开发宿主中手动安装。
+另有本地开发中的[网络搜索](plugins/web-search/README.md) `web-search` 0.1.0，基于宿主 Agent loop 并接入 fn Chat。当前开发分支的三个插件和根构建工具统一使用 `vendor/agent-sdk.tgz` 固定开发归档（包含 SVG/Agent/Chat）；公开宿主/SDK 尚不支持，未加入正式市场。check/test/pack 包含该插件，生成的 `artifacts/web-search-0.1.0.tgz` 可在兼容开发宿主中手动安装。
 
 ## 独立开发
 
-使用 Bun 1.4.3，根包与两个插件均固定消费公开 `@semicoder/fn-sdk@0.3.4`，不依赖相邻宿主源码。[vendor 快照](vendor/README.md)仅保留更名阶段历史，不参与当前安装。
+使用 Bun 1.4.3，当前根工具与三个插件均消费 `vendor/agent-sdk.tgz` 固定开发归档，不依赖相邻宿主源码；来源和哈希见 `vendor/agent-sdk.json`。公开 0.1.2 归档仍使用 npm SDK 0.3.4，与本地同版本候选内容不同。[更名阶段快照](vendor/README.md)继续保留历史。
 
 ```sh
 bun install --frozen-lockfile --ignore-scripts
@@ -50,3 +50,9 @@ GitHub 仓库已更名为 `semicoder-dev/fn-plugins`，remote 与 About 已同�
 - 随手记 [quick-notes-v0.1.0](https://github.com/semicoder-dev/malatang-plugins/releases/tag/quick-notes-v0.1.0)，源码 `a377f30`，SHA-256 `14b55f3722be87a3674cb7bdf0c41408cd8fbe1808de57cdf8dfc6d329cb56e0`。
 - 两个归档经匿名下载、包身份和哈希验收；索引 PR [#1](https://github.com/semicoder-dev/malatang-plugins/pull/1)、[#2](https://github.com/semicoder-dev/malatang-plugins/pull/2) 经 CI 后合并，公开 Raw 索引已返回两条记录。
 - 首次翻译流程在归档发布后因 Actions 无 PR 创建权限而报错；维护者补建 PR，标签与归档未移动。工作流此后保留候选分支并明确提示手工补建 PR，仓库保护未放宽。
+
+## SVG 图标开发（未发布）
+
+三个插件的 `src/icon.svg` 分别提供翻译、笔记和网络搜索造型；`fn.iconSvg: "dist/icon.svg"` 由 SDK 自动构建，`icon` 文字仍作加载失败回退及 fn Chat 图标。宿主用单色 mask 跟随前景色，应用中心保留原插件底色。
+
+pack 从 dist 读取 SVG 生成候选条目的 `iconSvg` 内容字段；公开 marketplace.json 不改动。图标最多 8 KiB，源和产物都不能越出插件目录。公开宿主不识别此字段，本地候选须安装到本次开发宿主；发行前需发布并独立验收兼容 SDK/宿主、为插件选择新版本，再更新正式索引，不能覆盖已有 0.1.2 公开归档。
