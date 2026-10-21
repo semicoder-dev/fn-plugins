@@ -1,1 +1,57 @@
-{"schemaVersion":2,"name":"fn 官方 Cordis 应用市场","applications":[]}
+{
+  "schemaVersion": 2,
+  "name": "fn 官方 Cordis 应用市场",
+  "applications": [
+    {
+      "id": "cordis-quick-notes",
+      "packageName": "@semicoder/fn-cordis-quick-notes",
+      "name": "随手记",
+      "description": "使用应用独立 KV 保存笔记。",
+      "icon": "记",
+      "iconSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"5\" y=\"3\" width=\"14\" height=\"18\" rx=\"2\"/><path d=\"M9 8h6M9 12h6M9 16h4M3 7h4M3 12h4M3 17h4\"/></svg>\n",
+      "version": "0.1.0",
+      "url": "https://github.com/semicoder-dev/fn-plugins/releases/download/cordis-quick-notes-v0.1.0/cordis-quick-notes-0.1.0.tgz",
+      "sha256": "52188160d86e310b64c92e7a42a0d56c49441bf1afc9633310ea85307f72ad62",
+      "core": {
+        "@deepseek-ai/cordis": "4.0.5",
+        "@semicoder/fn-sdk": "0.4.0",
+        "react": "19.2.7",
+        "react-dom": "19.2.7"
+      }
+    },
+    {
+      "id": "cordis-translate",
+      "packageName": "@semicoder/fn-cordis-translate",
+      "name": "译文",
+      "description": "通过独立模型连接翻译文本，历史由宿主 Session 保存。",
+      "icon": "文",
+      "iconSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 5h12M9 3v2M5 5c.8 4 3.5 7.5 8 10M13 5c-.8 4-4.5 8-10 11M13 21l4-10 4 10M14.2 18h5.6\"/></svg>\n",
+      "version": "0.1.0",
+      "url": "https://github.com/semicoder-dev/fn-plugins/releases/download/cordis-translate-v0.1.0/cordis-translate-0.1.0.tgz",
+      "sha256": "8c4daf157cb85e89a38a78b609b4b074b0502a77d273ee8c4239d9e2e5c2e068",
+      "core": {
+        "@deepseek-ai/cordis": "4.0.5",
+        "@semicoder/fn-sdk": "0.4.0",
+        "react": "19.2.7",
+        "react-dom": "19.2.7"
+      }
+    },
+    {
+      "id": "cordis-web-search",
+      "packageName": "@semicoder/fn-cordis-web-search",
+      "name": "网络搜索",
+      "description": "以 dsh Agent loop 调用宿主的搜索与网页读取工具。",
+      "icon": "搜",
+      "iconSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"10.5\" cy=\"10.5\" r=\"7.5\"/><path d=\"m16 16 5 5M3 10.5h15M10.5 3c-4 4-4 11 0 15M10.5 3c4 4 4 11 0 15\"/></svg>\n",
+      "version": "0.1.0",
+      "url": "https://github.com/semicoder-dev/fn-plugins/releases/download/cordis-web-search-v0.1.0/cordis-web-search-0.1.0.tgz",
+      "sha256": "691a5ac26f8654b2a48f4880114f33576164661cc4959f2114b2d6fd84467bd9",
+      "core": {
+        "@deepseek-ai/cordis": "4.0.5",
+        "@semicoder/fn-sdk": "0.4.0",
+        "react": "19.2.7",
+        "react-dom": "19.2.7"
+      }
+    }
+  ]
+}
