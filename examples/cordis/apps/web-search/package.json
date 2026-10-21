@@ -1,0 +1,27 @@
+{
+  "name": "@semicoder/fn-cordis-web-search",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./dist/client.js"
+  },
+  "files": [
+    "src/index.ts",
+    "dist"
+  ],
+  "fn": {
+    "schemaVersion": 1,
+    "id": "cordis-web-search",
+    "name": "网络搜索",
+    "description": "以 dsh Agent loop 调用宿主的搜索与网页读取工具。",
+    "icon": "搜",
+    "iconSvg": "dist/icon.svg"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "4.0.5",
+    "@semicoder/fn-sdk": "0.4.0",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  }
+}

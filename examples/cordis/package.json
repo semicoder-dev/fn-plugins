@@ -1,0 +1,26 @@
+{
+  "name": "fn-cordis-examples",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "check": "tsc --noEmit",
+    "build": "bun tasks.ts build",
+    "pack": "bun tasks.ts pack",
+    "test": "bun test tests"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "4.0.5",
+    "@deepseek-ai/dsh-agent": "0.2.1-rc.2",
+    "@deepseek-ai/dsh-session": "0.2.1-rc.2",
+    "@semicoder/fn-sdk": "0.4.0",
+    "@types/bun": "1.4.0",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "typescript": "7.0.2"
+  }
+}

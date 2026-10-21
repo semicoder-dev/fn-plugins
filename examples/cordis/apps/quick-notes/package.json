@@ -1,0 +1,27 @@
+{
+  "name": "@semicoder/fn-cordis-quick-notes",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./dist/client.js"
+  },
+  "files": [
+    "src/index.ts",
+    "dist"
+  ],
+  "fn": {
+    "schemaVersion": 1,
+    "id": "cordis-quick-notes",
+    "name": "随手记",
+    "description": "使用应用独立 KV 保存笔记。",
+    "icon": "记",
+    "iconSvg": "dist/icon.svg"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "4.0.5",
+    "@semicoder/fn-sdk": "0.4.0",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  }
+}

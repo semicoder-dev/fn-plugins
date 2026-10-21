@@ -1,0 +1,37 @@
+name: Release Cordis application
+on:
+  push:
+    tags: ['cordis-translate-v*', 'cordis-quick-notes-v*', 'cordis-web-search-v*']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: cordis-application-release
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    defaults:
+      run:
+        working-directory: examples/cordis
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-version: '1.4.3'
+      - run: bun install --frozen-lockfile --ignore-scripts
+      - run: bun run check && bun run test && bun run pack && bun catalog.ts candidate && bun catalog.ts check
+      - run: git diff --exit-code
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: cordis-candidates
+          path: examples/cordis/artifacts/
+      - name: Publish exact immutable application archive
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          bun -e 'const tag=process.env.RELEASE_TAG;const match=/^(cordis-(translate|quick-notes|web-search))-v([0-9]+\.[0-9]+\.[0-9]+)$/.exec(tag);if(!match)throw Error("Invalid tag");const pkg=await Bun.file(`apps/${match[2]}/package.json`).json();if(pkg.fn.id!==match[1]||pkg.version!==match[3])throw Error("Tag/package mismatch");const p=Bun.spawn(["gh","release","create",tag,`artifacts/${match[1]}-${match[3]}.tgz`,`artifacts/${match[1]}-${match[3]}.tgz.sha256`,`artifacts/${match[1]}.json`,"--verify-tag","--title",`${pkg.fn.name} ${pkg.version} · Cordis`,"--notes","适用于 fn 0.5 / SDK 0.4。市场索引在公开归档独立验收后通过 PR 上架；不兼容旧插件运行时。"],{stdout:"inherit",stderr:"inherit"});process.exit(await p.exited);'

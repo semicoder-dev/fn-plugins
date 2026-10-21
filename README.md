@@ -1,5 +1,9 @@
 # fn 官方插件与市场
 
+新 Cordis 应用位于 [examples/cordis](examples/cordis/README.md)，面向 fn 0.5 / SDK 0.4。新市场为 `marketplace-cordis.json`；下方旧市场/根 workspace 说明只适用于旧宿主，不将旧 manifest 插件混入新市场。
+
+全新 Cordis/Bun 开发示例位于 [examples/cordis](examples/cordis/README.md)：译文、KV 随手记和工具搜索。它们独立消费固定开发 SDK 归档，使用 TypeScript 后端、浏览器 Cordis 页面及上游 Session；与下方旧插件分开安装和验证，未登记市场、未发布。
+
 本仓库独立维护译文（translate）与随手记（quick-notes），宿主不携带插件，也不依赖本仓库构建。当前公开版本为 0.1.2，包名为 `@semicoder/fn-plugin-translate` 和 `@semicoder/fn-example-quick-notes`；清单字段为 `fn`，sdkVersion 保持 0.3。
 
 另有本地开发中的[网络搜索](plugins/web-search/README.md) `web-search` 0.1.0，基于宿主 Agent loop 并接入 fn Chat。当前开发分支的三个插件和根构建工具统一使用 `vendor/agent-sdk.tgz` 固定开发归档（包含 SVG/Agent/Chat）；公开宿主/SDK 尚不支持，未加入正式市场。check/test/pack 包含该插件，生成的 `artifacts/web-search-0.1.0.tgz` 可在兼容开发宿主中手动安装。

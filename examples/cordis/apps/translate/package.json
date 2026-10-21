@@ -1,0 +1,27 @@
+{
+  "name": "@semicoder/fn-cordis-translate",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./dist/client.js"
+  },
+  "files": [
+    "src/index.ts",
+    "dist"
+  ],
+  "fn": {
+    "schemaVersion": 1,
+    "id": "cordis-translate",
+    "name": "译文",
+    "description": "通过独立模型连接翻译文本，历史由宿主 Session 保存。",
+    "icon": "文",
+    "iconSvg": "dist/icon.svg"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "4.0.5",
+    "@semicoder/fn-sdk": "0.4.0",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  }
+}
