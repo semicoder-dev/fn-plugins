@@ -31,3 +31,7 @@ bun run pack
 新市场索引采用 `schemaVersion: 2`，`applications` 条目包含 id、packageName、name、description、version、HTTPS url、sha256 和精确 core 版本映射（含 `@semicoder/fn-sdk`）。`bun catalog.ts candidate` 生成候选；发布固定标签后，`bun catalog.ts promote <candidate.json>` 下载公开归档核对 SHA-256，再通过 PR 更新新市场。不得把未公开归档登记到市场，不写入旧市场。
 
 三个示例声明 `keepAlive: true` 保留当前窗口切页草稿，并使用随包单色 SVG；关闭/重启不恢复未保存草稿。发布使用 `cordis-translate-v0.1.0`、`cordis-quick-notes-v0.1.0`、`cordis-web-search-v0.1.0` 标签，各包独立版本。
+
+## 0.1.0 发行证据（2026-10-21）
+
+源码 `e3fb4dd`；候选 CI `39528664937`、译文 `39528782919`、随手记 `39528873554`、网络搜索 `39528934326` 均通过。三个公开归档与候选字节一致，精确 SDK 0.4.0；哈希记录在市场索引。独立宿主安装、共享核心、空闲切换、应用加载、卸载释放与 KV 重启恢复通过。市场通过 [PR #10](https://github.com/semicoder-dev/fn-plugins/pull/10) 合入 `ed2e765`，匿名索引验证三条。旧市场保持原样；真实外部模型/搜索质量不由此次本地生命周期验收代替。
