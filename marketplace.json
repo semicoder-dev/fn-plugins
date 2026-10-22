@@ -1,30 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 3,
   "name": "fn 官方插件市场",
-  "plugins": [
-    {
-      "id": "quick-notes",
-      "packageName": "@semicoder/fn-example-quick-notes",
-      "name": "随手记",
-      "description": "记录想法并保存到本机，无需配置模型。",
-      "icon": "记",
-      "color": "#6e8169",
-      "version": "0.1.2",
-      "sdkVersion": "0.3",
-      "url": "https://github.com/semicoder-dev/fn-plugins/releases/download/quick-notes-v0.1.2/quick-notes-0.1.2.tgz",
-      "sha256": "ba05a8bba6c35de9b32a488d55bbdf9e928e5aea5b780fdbdc6964080ffdccff"
-    },
-    {
-      "id": "translate",
-      "packageName": "@semicoder/fn-plugin-translate",
-      "name": "译文",
-      "description": "让意思抵达，让表达自然。一个轻巧的 AI 翻译工作台。",
-      "icon": "文",
-      "color": "#cf633c",
-      "version": "0.1.2",
-      "sdkVersion": "0.3",
-      "url": "https://github.com/semicoder-dev/fn-plugins/releases/download/translate-v0.1.2/translate-0.1.2.tgz",
-      "sha256": "73dc775fb7e5b5d2125c1d01ed79f9a854bc8c6e54f6695cea421f17921bc938"
-    }
-  ]
+  "plugins": []
 }

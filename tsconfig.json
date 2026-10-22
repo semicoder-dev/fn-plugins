@@ -1,1 +1,0 @@
-{ "compilerOptions": { "strict": true, "skipLibCheck": true, "target": "ES2023", "module": "Preserve", "moduleResolution": "Bundler", "jsx": "react-jsx", "noEmit": true, "allowImportingTsExtensions": true, "lib": ["ESNext", "DOM"], "types": ["bun", "vite/client"] }, "include": ["plugins", "scripts", "tests"] }
