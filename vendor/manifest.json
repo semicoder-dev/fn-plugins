@@ -1,0 +1,56 @@
+{
+  "source": "https://github.com/semicoder-dev/fn",
+  "commit": "2d677427cbc3e2e7041d0f43ae2c5a73baa43924",
+  "purpose": "Unpublished plugins-v1 development artifacts; never substitute public packages of the same version.",
+  "packages": [
+    {
+      "name": "@semicoder/fn-sdk",
+      "version": "0.4.0",
+      "sourcePath": "packages/sdk",
+      "archive": "semicoder-fn-sdk-2d67742.tgz",
+      "sha256": "ac9faa1f0c63b8421c21574437adca11c49e5f776eb7171d5191934781eb6f6c"
+    },
+    {
+      "name": "@semicoder/fn-host",
+      "version": "0.0.0",
+      "sourcePath": "packages/host",
+      "archive": "semicoder-fn-host-2d67742.tgz",
+      "sha256": "0f33440551756ecaee1ec227921d85b9ebc7d8eb205923721fa6f1f0734126bf"
+    },
+    {
+      "name": "@semicoder/fn-rpc",
+      "version": "0.0.0",
+      "sourcePath": "plugins/rpc",
+      "archive": "semicoder-fn-rpc-2d67742.tgz",
+      "sha256": "30eb8ce6f72a91a25df04e4c17966f021ee071bb4b0fa71c7f471dd4e568ec15"
+    },
+    {
+      "name": "@semicoder/fn-activity",
+      "version": "0.0.0",
+      "sourcePath": "plugins/activity",
+      "archive": "semicoder-fn-activity-2d67742.tgz",
+      "sha256": "777b856f27421211d0fea3a4593880546b18f5753f362da712d16fc15ce9a3e3"
+    },
+    {
+      "name": "@semicoder/fn-ui-layout",
+      "version": "0.0.0",
+      "sourcePath": "plugins/ui-layout",
+      "archive": "semicoder-fn-ui-layout-2d67742.tgz",
+      "sha256": "6d7fcb7210fec61dd75c51209fdbf722778f60c47df76e19d43798ef4b57c7ca"
+    },
+    {
+      "name": "@semicoder/fn-ui-navigation",
+      "version": "0.0.0",
+      "sourcePath": "plugins/ui-navigation",
+      "archive": "semicoder-fn-ui-navigation-2d67742.tgz",
+      "sha256": "9510b91c38902a3e11e6c04a1909f7978a0282ab631fafa45443a5cbd7f290c9"
+    },
+    {
+      "name": "@semicoder/fia",
+      "version": "0.18.0",
+      "sourcePath": "framework/fia/packages/cli",
+      "archive": "semicoder-fia-2d67742.tgz",
+      "sha256": "bdb0f67840176281b6015837bfe1067554266645724e9ed266e733ebbb9cca7f"
+    }
+  ]
+}

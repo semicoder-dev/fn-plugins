@@ -3,7 +3,41 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "check": "bun scripts/check.ts",
-    "index:check": "bun scripts/check.ts"
+    "check": "bun scripts/check.ts && tsc --noEmit && oxfmt --check",
+    "test": "bun test plugins/kanban/tests",
+    "build": "bun scripts/build.ts",
+    "pack": "bun scripts/build.ts --pack",
+    "market:local": "bun scripts/local-market.ts",
+    "index:check": "bun scripts/check.ts",
+    "fmt": "oxfmt"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "4.0.5",
+    "@deepseek-ai/dsh-client-store": "0.2.1-rc.2",
+    "@deepseek-ai/dsh-client-ui-renderer": "0.2.1-rc.2",
+    "@deepseek-ai/dsh-client-ui-slots": "0.2.1-rc.2",
+    "@semicoder/fia": "file:./vendor/semicoder-fia-2d67742.tgz",
+    "@semicoder/fn-activity": "file:./vendor/semicoder-fn-activity-2d67742.tgz",
+    "@semicoder/fn-host": "file:./vendor/semicoder-fn-host-2d67742.tgz",
+    "@semicoder/fn-rpc": "file:./vendor/semicoder-fn-rpc-2d67742.tgz",
+    "@semicoder/fn-sdk": "file:./vendor/semicoder-fn-sdk-2d67742.tgz",
+    "@semicoder/fn-ui-layout": "file:./vendor/semicoder-fn-ui-layout-2d67742.tgz",
+    "@semicoder/fn-ui-navigation": "file:./vendor/semicoder-fn-ui-navigation-2d67742.tgz",
+    "@types/bun": "1.4.3",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "oxfmt": "0.68.0",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "typescript": "5.9.3"
+  },
+  "overrides": {
+    "@semicoder/fia": "file:./vendor/semicoder-fia-2d67742.tgz",
+    "@semicoder/fn-activity": "file:./vendor/semicoder-fn-activity-2d67742.tgz",
+    "@semicoder/fn-host": "file:./vendor/semicoder-fn-host-2d67742.tgz",
+    "@semicoder/fn-rpc": "file:./vendor/semicoder-fn-rpc-2d67742.tgz",
+    "@semicoder/fn-sdk": "file:./vendor/semicoder-fn-sdk-2d67742.tgz",
+    "@semicoder/fn-ui-layout": "file:./vendor/semicoder-fn-ui-layout-2d67742.tgz",
+    "@semicoder/fn-ui-navigation": "file:./vendor/semicoder-fn-ui-navigation-2d67742.tgz"
   }
 }

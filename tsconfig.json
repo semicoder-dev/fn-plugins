@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "skipLibCheck": true,
+    "target": "ES2023",
+    "module": "Preserve",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "types": ["bun"],
+    "lib": ["ESNext", "DOM"]
+  },
+  "include": ["plugins/kanban/src", "plugins/kanban/tests", "scripts"]
+}
