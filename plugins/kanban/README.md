@@ -26,7 +26,7 @@
 仅支持全插件化候选宿主，依赖快照和操作命令见仓库根 README。公开 fn 0.5.2、公开 SDK 0.4.0 不包含本契约。
 
 - 后端 `src/index.ts` 注入 `host`、`rpc`、`activity`，在 `kanban` 命名空间注册契约；`src/store.ts` 独立持久化，Cordis 销毁时关闭数据库和 API。
-- 客户端导出 `./client`，注入原版 slots、默认布局、导航和 `api:kanban`，只贡献 `fn.sidebar.top` / `fn.main`（页面 key `fn-kanban`）。主样式类以 `fn-kanban` / `kb-` 命名，样式与监听随客户端插件卸载清理。
+- 客户端导出 `./client`，注入原版 slots、默认布局、导航和 `api:kanban`，只贡献 `fn.sidebar.top` / `fn.main`（页面 key `fn-kanban`）。`@semicoder/fn-ui` 提供原版 dsh Button/Input/Menu/Modal 等组件，侧栏使用导航插件公开的 NavigationButton；CSS Modules 与 `--dsw-*` 语义 token 统一明暗及自定义主题，样式与监听随插件卸载清理。
 - 插件 ID 是产品标识，运行包 ID 由市场生成，后端/客户端实例 ID 由 profile 管理。当前包提供单个本机看板服务，不要同时启用两份后端实例注册相同 API 命名空间。
 - `fn.iconSvg` 声明固定输出 `dist/icon.svg`，构建脚本复制包内 `src/icon.svg`；市场索引使用 SVG 内容。共享核心和 React 是 peer dependencies，打包不携带它们。
 

@@ -7,8 +7,8 @@
       "name": "@semicoder/fn-sdk",
       "version": "0.4.0",
       "sourcePath": "packages/sdk",
-      "archive": "semicoder-fn-sdk-2d67742.tgz",
-      "sha256": "ac9faa1f0c63b8421c21574437adca11c49e5f776eb7171d5191934781eb6f6c"
+      "archive": "semicoder-fn-sdk-d4426323a9a8.tgz",
+      "sha256": "d4426323a9a864d712aa7c62a24261862f6e28ef6b20f00396f4b056c9d55ec7"
     },
     {
       "name": "@semicoder/fn-host",
@@ -35,15 +35,15 @@
       "name": "@semicoder/fn-ui-layout",
       "version": "0.0.0",
       "sourcePath": "plugins/ui-layout",
-      "archive": "semicoder-fn-ui-layout-2d67742.tgz",
-      "sha256": "6d7fcb7210fec61dd75c51209fdbf722778f60c47df76e19d43798ef4b57c7ca"
+      "archive": "semicoder-fn-ui-layout-bf42a0aca29f.tgz",
+      "sha256": "bf42a0aca29f3ab0aeea12098627660ce068da987815a25150fc3e3ed31bb570"
     },
     {
       "name": "@semicoder/fn-ui-navigation",
       "version": "0.0.0",
       "sourcePath": "plugins/ui-navigation",
-      "archive": "semicoder-fn-ui-navigation-2d67742.tgz",
-      "sha256": "9510b91c38902a3e11e6c04a1909f7978a0282ab631fafa45443a5cbd7f290c9"
+      "archive": "semicoder-fn-ui-navigation-6c8b2d8f88d2.tgz",
+      "sha256": "6c8b2d8f88d2f16f5cb1f59ccce3b950107902906ccb2462449351e1b44849c4"
     },
     {
       "name": "@semicoder/fia",
@@ -51,6 +51,14 @@
       "sourcePath": "framework/fia/packages/cli",
       "archive": "semicoder-fia-2d67742.tgz",
       "sha256": "bdb0f67840176281b6015837bfe1067554266645724e9ed266e733ebbb9cca7f"
+    },
+    {
+      "name": "@semicoder/fn-ui",
+      "version": "0.0.0",
+      "sourcePath": "packages/ui",
+      "archive": "semicoder-fn-ui-8393231e8983.tgz",
+      "sha256": "8393231e89832c30cfc70d3fecb37ff8b439b8e7b3e03cf3e8358d0a3b571014"
     }
-  ]
+  ],
+  "sourceState": "Uncommitted UI migration on the recorded base commit; each archive is fixed by SHA-256, not a public package."
 }
