@@ -2,7 +2,8 @@ import { defineAPI, z } from "@semicoder/fia/api";
 
 const id = z.string().uuid();
 const title = z.string().trim().min(1, "请输入名称").max(200);
-export const colors = ["green", "blue", "purple", "yellow", "orange", "red"] as const;
+export const defaultColors = ["green", "blue", "purple", "yellow", "orange", "red"] as const;
+export const colors = [...defaultColors, "sky", "lime", "pink", "gray"] as const;
 export const colorNames = {
   green: "绿色",
   blue: "蓝色",
@@ -10,7 +11,22 @@ export const colorNames = {
   yellow: "黄色",
   orange: "橙色",
   red: "红色",
+  sky: "天蓝色",
+  lime: "青柠色",
+  pink: "粉色",
+  gray: "灰色",
 };
+export const shades = ["light", "normal", "dark"] as const;
+export const labelDetails = z
+  .object({
+    name: z.string().trim().max(80),
+    color: z.enum(colors).nullable(),
+    shade: z.enum(shades),
+  })
+  .refine((value) => value.color !== null || Boolean(value.name), "无色标签需要填写名称");
+export const label = z.object({ id, boardId: id, ...labelDetails.shape });
+export type Label = z.infer<typeof label>;
+export type LabelDetails = z.infer<typeof labelDetails>;
 const checklist = z
   .array(z.object({ id, text: title, done: z.boolean() }))
   .max(100)
@@ -18,7 +34,10 @@ const checklist = z
 export const cardDetails = z.object({
   title,
   description: z.string().max(20000),
-  labels: z.array(z.enum(colors)).max(6),
+  labels: z
+    .array(id)
+    .max(100)
+    .refine((items) => new Set(items).size === items.length, "标签不能重复"),
   due: z.iso.date().nullable(),
   done: z.boolean(),
   checklist,
@@ -37,6 +56,8 @@ export const state = z.object({
   boards: z.array(board).max(100),
   lists: z.array(list).max(1000),
   cards: z.array(card).max(10000),
+  labels: z.array(label).max(10000),
+  labelNamesVisible: z.boolean(),
 });
 export type State = z.infer<typeof state>;
 export type Card = z.infer<typeof card>;
@@ -45,6 +66,10 @@ export const command = z.discriminatedUnion("type", [
   z.object({ type: z.literal("board.create"), title }),
   z.object({ type: z.literal("board.rename"), id, title }),
   z.object({ type: z.literal("board.archive"), id, archived: z.boolean() }),
+  z.object({ type: z.literal("label.create"), boardId: id, details: labelDetails }),
+  z.object({ type: z.literal("label.edit"), id, details: labelDetails }),
+  z.object({ type: z.literal("label.delete"), id }),
+  z.object({ type: z.literal("labels.display"), visible: z.boolean() }),
   z.object({ type: z.literal("list.create"), boardId: id, title }),
   z.object({ type: z.literal("list.rename"), id, title }),
   z.object({ type: z.literal("list.archive"), id, archived: z.boolean() }),
@@ -61,6 +86,7 @@ export const mutation = z.object({
   command,
 });
 export type Mutation = z.infer<typeof mutation>;
+export type MutationResult = { state: State; createdId?: string };
 export default defineAPI({
   methods: {
     read: { description: "读取本机看板", input: z.object({}), output: state },

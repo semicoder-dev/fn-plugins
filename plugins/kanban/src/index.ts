@@ -9,7 +9,7 @@ import { KanbanStore } from "./store.ts";
 
 export const inject = ["host", "rpc", "activity"];
 export function apply(ctx: Context) {
-  const store = new KanbanStore(join(ctx.host.dataDirectory, "fn-kanban", "kanban.sqlite"));
+  const store = new KanbanStore(join(ctx.host.dataDirectory, "fn-kanban", "kanban-v2.sqlite"));
   ctx.effect(() => () => store.close());
   ctx.rpc.register(
     "kanban",

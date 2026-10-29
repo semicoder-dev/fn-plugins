@@ -12,8 +12,11 @@ import {
   IconPlusOutlineRegular,
   IconSearchOutlineRegular,
   IconChecklistOutlineRegular,
+  IconCheckOutlineRegular,
+  IconArchiveOutlineRegular,
+  IconChevronDownOutlineRegular,
 } from "@semicoder/fn-ui";
-import { NavigationButton } from "@semicoder/fn-ui-navigation/view";
+import { NavigationButton, useNavigation } from "@semicoder/fn-ui-navigation/view";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import type { Context } from "@deepseek-ai/cordis";
 import type { APIClient } from "@semicoder/fia/api";
@@ -21,13 +24,15 @@ import { client } from "@semicoder/fn-sdk/client";
 import type Navigation from "@semicoder/fn-ui-navigation/types";
 import type {} from "@semicoder/fn-ui-layout/contract";
 import contract, {
-  colors,
-  colorNames,
   type Card,
   type Command,
   type Details,
   type State,
+  type MutationResult,
 } from "./contract.ts";
+import { LabelBadge, LabelsDialog, labelTitle, type LabelCommand } from "./labels.tsx";
+import { BoardHome, BoardHeader } from "./boards.tsx";
+import { useBoardDrag } from "./drag.ts";
 export const inject = ["slots", "layoutSlots", "navigation", "platform", "api:kanban"];
 type Remote = APIClient<typeof contract>;
 function Icon() {
@@ -60,7 +65,9 @@ export function apply(ctx: Context) {
   ctx.slots.register({ name: "fn.sidebar.top", id: "fn-kanban", order: 20 }, () => (
     <Entry navigation={ctx.navigation} />
   ));
-  ctx.slots.register({ name: "fn.main", key: "fn-kanban" }, () => <Kanban remote={remote} />);
+  ctx.slots.register({ name: "fn.main", key: "fn-kanban" }, () => (
+    <Kanban remote={remote} navigation={ctx.navigation} />
+  ));
 }
 type DialogState =
   | {
@@ -70,30 +77,28 @@ type DialogState =
     }
   | {
       type: "archive";
+      boardId?: string;
     }
+  | { type: "filters" }
+  | { type: "labels"; boardId: string }
   | {
       type: "card";
       card: Card;
       revision: number;
     };
-type Drag = {
-  kind: "card" | "list";
-  id: string;
-};
-function Kanban({ remote }: { remote: Remote }) {
+function Kanban({ remote, navigation }: { remote: Remote; navigation: Navigation }) {
+  const path = useNavigation(navigation);
+  const boardId = path.split("/")[1] ?? "";
   const [data, setData] = useState<State | null>(null),
     latest = useRef<State | null>(null);
-  const [boardId, setBoardId] = useState(""),
-    [query, setQuery] = useState(""),
+  const [query, setQuery] = useState(""),
     [label, setLabel] = useState("");
   const [menu, setMenu] = useState("");
   const [error, setError] = useState(""),
     [saving, setSaving] = useState(false),
     [online, setOnline] = useState(false);
-  const [dialog, setDialog] = useState<DialogState | null>(null),
-    [drag, setDrag] = useState<Drag | null>(null);
-  const [dropId, setDropId] = useState(""),
-    busy = useRef(false),
+  const [dialog, setDialog] = useState<DialogState | null>(null);
+  const busy = useRef(false),
     mounted = useRef(false);
   const pending = useRef<{
     fingerprint: string;
@@ -127,12 +132,29 @@ function Kanban({ remote }: { remote: Remote }) {
     };
   }, [remote, refresh]);
   const boards = data?.boards.filter((item) => !item.archived) ?? [];
-  const board = boards.find((item) => item.id === boardId) ?? boards[0];
+  const board = boards.find((item) => item.id === boardId);
+  const openBoard = (id: string) => navigation.go(`fn-kanban/${id}`);
+  useEffect(() => {
+    setQuery("");
+    setLabel("");
+    setMenu("");
+    setDialog(null);
+    setError("");
+  }, [boardId]);
+  useEffect(() => {
+    if (data && boardId && !board) navigation.go("fn-kanban");
+  }, [data, boardId, board, navigation]);
   const lists = data?.lists.filter((item) => item.boardId === board?.id && !item.archived) ?? [];
+  const boardLabels = data?.labels.filter((item) => item.boardId === board?.id) ?? [];
+  const labelMap = new Map(data?.labels.map((item) => [item.id, item]));
+  useEffect(() => {
+    if (label && !data?.labels.some((item) => item.id === label && item.boardId === board?.id))
+      setLabel("");
+  }, [data, board?.id, label]);
   const filtered = Boolean(query.trim() || label);
   const matches = (card: Card) =>
-    (!label || card.labels.includes(label as (typeof colors)[number])) &&
-    `${card.title}\n${card.description}\n${card.checklist.map((item) => item.text).join("\n")}`
+    (!label || card.labels.includes(label)) &&
+    `${card.title}\n${card.description}\n${card.checklist.map((item) => item.text).join("\n")}\n${card.labels.map((id) => labelMap.get(id)?.name ?? "").join("\n")}`
       .toLocaleLowerCase()
       .includes(query.trim().toLocaleLowerCase());
   async function mutate(command: Command, revision = latest.current?.revision) {
@@ -161,81 +183,73 @@ function Kanban({ remote }: { remote: Remote }) {
       if (mounted.current) setSaving(false);
     }
   }
-  function startDrag(event: React.DragEvent, value: Drag) {
-    if (filtered || saving) {
+  useEffect(() => {
+    const keydown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement;
+      if (
+        event.key !== ";" ||
+        event.repeat ||
+        event.isComposing ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.altKey ||
+        dialog ||
+        !board ||
+        !data ||
+        saving ||
+        target.closest("input,textarea,select,[contenteditable=true],[role=dialog],[role=menu]")
+      )
+        return;
       event.preventDefault();
-      return;
-    }
-    event.stopPropagation();
-    event.dataTransfer.effectAllowed = "move";
-    event.dataTransfer.setData("application/x-fn-kanban", JSON.stringify(value));
-    if (value.kind === "list") {
-      // The header is the drag handle; the preview should include the whole list.
-      const list = event.currentTarget.closest<HTMLElement>("[data-list-id]");
-      if (list) {
-        const bounds = list.getBoundingClientRect();
-        event.dataTransfer.setDragImage(
-          list,
-          event.clientX - bounds.left,
-          event.clientY - bounds.top,
-        );
-      }
-    }
-    setDrag(value);
-  }
-  function over(event: React.DragEvent, id: string, kind: Drag["kind"]) {
-    if (!drag || drag.kind !== kind || filtered) return;
-    event.preventDefault();
-    event.stopPropagation();
-    event.dataTransfer.dropEffect = "move";
-    setDropId(id);
-  }
-  function drop(
-    event: React.DragEvent,
-    target: string,
-    beforeId: string | null,
-    kind: Drag["kind"],
-  ) {
-    if (!drag || drag.kind !== kind || filtered) return;
-    event.preventDefault();
-    event.stopPropagation();
-    void mutate(
-      kind === "card"
-        ? { type: "card.move", id: drag.id, listId: target, beforeId }
-        : { type: "list.move", id: drag.id, beforeId },
-    );
-    setDrag(null);
-    setDropId("");
-  }
-  const total =
-    data?.cards.filter((card) => !card.archived && lists.some((list) => list.id === card.listId))
-      .length ?? 0;
+      void mutate({ type: "labels.display", visible: !data.labelNamesVisible });
+    };
+    window.addEventListener("keydown", keydown);
+    return () => window.removeEventListener("keydown", keydown);
+  }, [dialog, board?.id, data, saving]);
+  const drag = useBoardDrag({
+    boardId,
+    revision: data?.revision ?? 0,
+    lists,
+    cards: data?.cards ?? [],
+    disabled: filtered || saving || !online || Boolean(dialog || menu),
+    move: async (command, revision) => Boolean(await mutate(command, revision)),
+  });
+  const listMap = new Map(lists.map((list) => [list.id, list]));
+  const cardMap = new Map(data?.cards.map((card) => [card.id, card]));
+  const visibleLists = drag.preview
+    ? drag.preview.layout.lists.flatMap((id) => listMap.get(id) ?? [])
+    : lists;
+  const archiveBoardId = dialog?.type === "archive" ? dialog.boardId : undefined;
+  const archivedBoards = data?.boards.filter((item) => item.archived && !archiveBoardId) ?? [];
+  const archivedLists =
+    data?.lists.filter((item) => item.archived && item.boardId === archiveBoardId) ?? [];
+  const archivedCards =
+    data?.cards.filter(
+      (item) =>
+        item.archived &&
+        data.lists.some((list) => list.id === item.listId && list.boardId === archiveBoardId),
+    ) ?? [];
   return (
     <div className={cx("fn-kanban")} aria-label="看板工作区">
-      <header className={cx("kb-topbar")}>
-        <div className={cx("kb-brand")}>
-          <Icon />
-          <h1>看板</h1>
-          <span className={cx("kb-local")}>仅存储在本机</span>
-        </div>
-        <div className={cx("kb-actions")}>
-          <span role="status" className={cx("kb-muted")}>
-            {saving ? "正在保存…" : online ? "已保存到本机" : "正在连接…"}
-          </span>
-          <Button onClick={() => setDialog({ type: "archive" })} type="button">
-            归档
-          </Button>
-          <Button
-            className={cx("kb-primary")}
-            disabled={!online}
-            onClick={() => setDialog({ type: "board.create", title: "" })}
-            type="button"
-            variant="primary"
-          >
-            ＋ 新建看板
-          </Button>
-        </div>
-      </header>
+      {board && data && (
+        <BoardHeader
+          key={board.id}
+          title={board.title}
+          query={query}
+          onQuery={setQuery}
+          filtered={filtered}
+          onFilters={() => setDialog({ type: "filters" })}
+          saving={saving}
+          online={online}
+          back={() => navigation.go("fn-kanban")}
+          manageLabels={() => setDialog({ type: "labels", boardId: board.id })}
+          labelNamesVisible={data.labelNamesVisible}
+          toggleLabels={() =>
+            void mutate({ type: "labels.display", visible: !data.labelNamesVisible })
+          }
+          showArchived={() => setDialog({ type: "archive", boardId: board.id })}
+        />
+      )}
       {error && (
         <div className={cx("kb-error")} role="alert">
           <span>{error}</span>
@@ -255,112 +269,43 @@ function Kanban({ remote }: { remote: Remote }) {
           <h2>正在打开本地看板…</h2>
         </div>
       ) : !board ? (
-        <div className={cx("kb-empty")}>
-          <div className={cx("kb-empty-icon")}>
-            <Icon />
-          </div>
-          <h2>把想法变成下一步</h2>
-          <p>创建一个看板，用列表安排进度，用卡片记录要做的事。</p>
-          <Button
-            className={cx("kb-primary")}
-            onClick={() => setDialog({ type: "board.create", title: "我的看板" })}
-            type="button"
-            variant="primary"
-          >
-            创建第一个看板
-          </Button>
-          <small>无需账号，内容保存在这台电脑上。</small>
-        </div>
+        <BoardHome
+          data={data}
+          saving={saving}
+          online={online}
+          open={openBoard}
+          create={() => setDialog({ type: "board.create", title: "" })}
+          rename={(board) => setDialog({ type: "board.rename", id: board.id, title: board.title })}
+          archive={(board) => void mutate({ type: "board.archive", id: board.id, archived: true })}
+          showArchived={() => setDialog({ type: "archive" })}
+        />
       ) : (
         <>
-          <div className={cx("kb-boardbar")}>
-            <div className={cx("kb-board-name")}>
-              <Select
-                value={board.id}
-                onValueChange={(value) => {
-                  setBoardId(value);
-                  setQuery("");
-                  setLabel("");
-                }}
-                label={"切换看板"}
-                options={[...(boards.map((item) => ({ value: item.id, label: item.title })) ?? [])]}
-              />
-              <span className={cx("kb-count")}>{total} 张卡片</span>
-              <Button
-                className={cx("kb-icon-button")}
-                aria-label="重命名看板"
-                title="重命名看板"
-                onClick={() =>
-                  setDialog({ type: "board.rename", id: board.id, title: board.title })
-                }
-                type="button"
-              >
-                <IconEditOutlineRegular />
-              </Button>
-              <Button
-                className={cx("kb-quiet")}
-                disabled={saving}
-                onClick={() => void mutate({ type: "board.archive", id: board.id, archived: true })}
-                type="button"
-              >
-                归档看板
-              </Button>
-            </div>
-            <div className={cx("kb-filters")}>
-              <Input
-                type="search"
-                icon={<IconSearchOutlineRegular />}
-                aria-label="搜索卡片"
-                placeholder="搜索卡片…"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-              />
-              <Select
-                value={label}
-                onValueChange={(value) => setLabel(value)}
-                label={"筛选标签"}
-                options={[
-                  { value: "", label: "所有标签" },
-                  ...(colors.map((color) => ({ value: color, label: colorNames[color] })) ?? []),
-                ]}
-              />
-              {filtered && (
-                <Button
-                  onClick={() => {
-                    setQuery("");
-                    setLabel("");
-                  }}
-                  type="button"
-                >
-                  清除筛选
-                </Button>
-              )}
-            </div>
-          </div>
-          {filtered && <p className={cx("kb-filter-note")}>正在筛选卡片；清除筛选后可拖动排序。</p>}
           <div
-            className={cx("kb-board")}
+            ref={drag.root}
+            className={cx("kb-board", Boolean(drag.preview) && "kb-board-dragging")}
             aria-label={board.title}
-            onDragEnd={() => {
-              setDrag(null);
-              setDropId("");
-            }}
+            onPointerDown={drag.onPointerDown}
+            onClickCapture={drag.onClickCapture}
+            onDragStart={(event) => event.preventDefault()}
           >
-            {lists.map((list, listIndex) => {
-              const cards = data.cards.filter((card) => card.listId === list.id && !card.archived);
+            {visibleLists.map((list) => {
+              const listIndex = lists.findIndex((item) => item.id === list.id);
+              const cards = drag.preview
+                ? (drag.preview.layout.cards[list.id] ?? []).flatMap((id) => cardMap.get(id) ?? [])
+                : data.cards.filter((card) => card.listId === list.id && !card.archived);
               return (
                 <section
                   key={list.id}
-                  className={cx(`kb-list ${dropId === list.id ? "kb-drop" : ""}`)}
+                  className={cx("kb-list", drag.preview?.item.id === list.id && "kb-placeholder")}
                   aria-label={`${list.title}列表`}
                   data-list-id={list.id}
-                  onDragOver={(e) => over(e, list.id, "list")}
-                  onDrop={(e) => drop(e, list.id, list.id, "list")}
+                  data-drag-placeholder={drag.preview?.item.id === list.id || undefined}
                 >
                   <header
                     className={cx("kb-list-head")}
-                    draggable={!filtered && !saving}
-                    onDragStart={(e) => startDrag(e, { kind: "list", id: list.id })}
+                    data-list-handle
+                    data-drag-disabled={filtered || saving || undefined}
                     title="拖动以调整列表顺序"
                   >
                     <Button
@@ -419,63 +364,97 @@ function Kanban({ remote }: { remote: Remote }) {
                     />
                   </header>
                   <div
-                    className={cx(`kb-cards ${dropId === `end:${list.id}` ? "kb-drop" : ""}`)}
+                    className={cx("kb-cards")}
                     aria-label={`${list.title}卡片区域`}
-                    onDragOver={(e) => over(e, `end:${list.id}`, "card")}
-                    onDrop={(e) => drop(e, list.id, null, "card")}
+                    data-card-area
                   >
                     {cards.filter(matches).map((card) => (
-                      <Button
+                      <article
                         key={card.id}
                         className={cx(
-                          `kb-card ${dropId === card.id ? "kb-drop" : ""} ${drag?.id === card.id ? "kb-dragging" : ""}`,
+                          "kb-card",
+                          drag.preview?.item.id === card.id && "kb-placeholder",
                         )}
                         data-card-id={card.id}
-                        draggable={!filtered && !saving}
-                        onDragStart={(e) => startDrag(e, { kind: "card", id: card.id })}
-                        onDragOver={(e) => over(e, card.id, "card")}
-                        onDrop={(e) => drop(e, list.id, card.id, "card")}
-                        onClick={() => setDialog({ type: "card", card, revision: data.revision })}
-                        type="button"
+                        data-drag-placeholder={drag.preview?.item.id === card.id || undefined}
+                        data-drag-disabled={filtered || saving || undefined}
+                        onClick={(event) => {
+                          if (event.target === event.currentTarget)
+                            setDialog({ type: "card", card, revision: data.revision });
+                        }}
                       >
-                        {card.labels.length > 0 && (
+                        {card.labels.some((id) => labelMap.get(id)?.color) && (
                           <span className={cx("kb-labels")}>
-                            {card.labels.map((color) => (
-                              <span
-                                key={color}
-                                className={cx(`kb-label kb-${color}`)}
-                                title={colorNames[color]}
-                                aria-label={colorNames[color]}
-                              />
-                            ))}
+                            {card.labels.map((id) => {
+                              const item = labelMap.get(id);
+                              return item?.color ? (
+                                <Button
+                                  key={id}
+                                  type="button"
+                                  data-label-toggle
+                                  className={cx("kb-label-toggle")}
+                                  disabled={saving}
+                                  aria-label={`${labelTitle(item)}，${data.labelNamesVisible ? "隐藏" : "显示"}标签文字`}
+                                  onClick={() =>
+                                    void mutate({
+                                      type: "labels.display",
+                                      visible: !data.labelNamesVisible,
+                                    })
+                                  }
+                                >
+                                  <LabelBadge label={item} showName={data.labelNamesVisible} />
+                                </Button>
+                              ) : null;
+                            })}
                           </span>
                         )}
-                        <span className={cx(`kb-card-title ${card.done ? "kb-done" : ""}`)}>
-                          {card.title}
-                        </span>
-                        {(card.due ||
-                          card.description ||
-                          card.checklist.length > 0 ||
-                          card.done) && (
-                          <span className={cx("kb-card-meta")}>
-                            {card.done && <span className={cx("kb-complete")}>✓ 已完成</span>}
-                            {card.due && (
-                              <span
-                                className={cx(!card.done && card.due < today() ? "kb-overdue" : "")}
-                              >
-                                ◷ {card.due.slice(5).replace("-", "/")}
-                              </span>
-                            )}
-                            {card.description && <span aria-label="有描述">≡</span>}
-                            {card.checklist.length > 0 && (
-                              <span>
-                                ☑ {card.checklist.filter((item) => item.done).length}/
-                                {card.checklist.length}
-                              </span>
-                            )}
+                        <Button
+                          className={cx("kb-card-open")}
+                          type="button"
+                          aria-label={`打开卡片 ${card.title}`}
+                          onClick={() => setDialog({ type: "card", card, revision: data.revision })}
+                        >
+                          <span className={cx(`kb-card-title ${card.done ? "kb-done" : ""}`)}>
+                            {card.title}
                           </span>
-                        )}
-                      </Button>
+                          {(card.due ||
+                            card.description ||
+                            card.checklist.length > 0 ||
+                            card.done) && (
+                            <span className={cx("kb-card-meta")}>
+                              {card.done && (
+                                <span className={cx("kb-complete")}>
+                                  <IconCheckOutlineRegular aria-hidden="true" /> 已完成
+                                </span>
+                              )}
+                              {card.due && (
+                                <span
+                                  className={cx(
+                                    !card.done && card.due < today() ? "kb-overdue" : "",
+                                  )}
+                                  aria-label={`截止日期 ${card.due}`}
+                                >
+                                  {card.due.slice(5).replace("-", "/")}
+                                </span>
+                              )}
+                              {card.description && (
+                                <span aria-label="有描述" title="有描述">
+                                  <IconEditOutlineRegular aria-hidden="true" />
+                                </span>
+                              )}
+                              {card.checklist.length > 0 && (
+                                <span
+                                  aria-label={`检查清单 ${card.checklist.filter((item) => item.done).length}/${card.checklist.length}`}
+                                >
+                                  <IconChecklistOutlineRegular aria-hidden="true" />
+                                  {card.checklist.filter((item) => item.done).length}/
+                                  {card.checklist.length}
+                                </span>
+                              )}
+                            </span>
+                          )}
+                        </Button>
+                      </article>
                     ))}
                     {!cards.length && <div className={cx("kb-list-empty")}>将卡片拖到这里</div>}
                     {cards.length > 0 && !cards.some(matches) && (
@@ -493,9 +472,7 @@ function Kanban({ remote }: { remote: Remote }) {
               );
             })}
             <Button
-              className={cx(`kb-add-list ${dropId === "last-list" ? "kb-drop" : ""}`)}
-              onDragOver={(e) => over(e, "last-list", "list")}
-              onDrop={(e) => drop(e, "", null, "list")}
+              className={cx("kb-add-list")}
               onClick={() => setDialog({ type: "list.create", id: board.id, title: "" })}
               type="button"
             >
@@ -503,6 +480,63 @@ function Kanban({ remote }: { remote: Remote }) {
             </Button>
           </div>
         </>
+      )}
+      <span className={cx("kb-sr-only")} role="status" aria-live="polite">
+        {drag.announcement}
+      </span>
+      {dialog?.type === "filters" && board && (
+        <Modal
+          open
+          title="搜索与筛选"
+          closeLabel="关闭筛选"
+          className={cx("kb-name-dialog")}
+          contentClassName={cx("kb-dialog-content")}
+          onClose={() => setDialog(null)}
+        >
+          <label className={cx("kb-field")}>
+            搜索卡片
+            <Input
+              data-modal-autofocus
+              type="search"
+              aria-label="筛选中搜索卡片"
+              placeholder="搜索名称、描述、标签…"
+              icon={<IconSearchOutlineRegular />}
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+            />
+          </label>
+          <div className={cx("kb-field")}>
+            <span>标签</span>
+            <Select
+              value={label}
+              onValueChange={setLabel}
+              label="筛选标签"
+              options={[
+                { value: "", label: "所有标签" },
+                ...boardLabels.map((item) => ({
+                  value: item.id,
+                  label: <LabelBadge label={item} fallback />,
+                })),
+              ]}
+            />
+          </div>
+          <p className={cx("kb-muted")}>筛选即时生效；清除筛选后可拖动排序。</p>
+          <div className={cx("kb-modal-footer")}>
+            <Button
+              type="button"
+              disabled={!filtered}
+              onClick={() => {
+                setQuery("");
+                setLabel("");
+              }}
+            >
+              清除筛选
+            </Button>
+            <Button type="button" variant="primary" onClick={() => setDialog(null)}>
+              完成
+            </Button>
+          </div>
+        </Modal>
       )}
       {dialog?.type === "card" && data && (
         <CardDialog
@@ -512,6 +546,20 @@ function Kanban({ remote }: { remote: Remote }) {
           saving={saving}
           error={error}
           close={() => setDialog(null)}
+          changeLabels={async (command) => {
+            const result = await mutate(command, dialog.revision);
+            if (result)
+              setDialog((current) =>
+                current?.type === "card" && current.card.id === dialog.card.id
+                  ? {
+                      ...current,
+                      revision: result.state.revision,
+                      card: result.state.cards.find((card) => card.id === current.card.id)!,
+                    }
+                  : current,
+              );
+            return result;
+          }}
           save={async (details) =>
             Boolean(
               await mutate({ type: "card.edit", id: dialog.card.id, details }, dialog.revision),
@@ -535,68 +583,70 @@ function Kanban({ remote }: { remote: Remote }) {
           }
         />
       )}
+      {dialog?.type === "labels" && data && (
+        <LabelsDialog
+          boardId={dialog.boardId}
+          data={data}
+          saving={saving}
+          error={error}
+          mutate={mutate}
+          close={() => setDialog(null)}
+        />
+      )}
       {dialog?.type === "archive" && data && (
         <Modal
           open
           closeLabel="关闭对话框"
           className={cx("kb-dialog")}
           contentClassName={cx("kb-dialog-content")}
-          title="归档"
+          title={archiveBoardId ? "归档内容" : "归档看板"}
           onClose={() => setDialog(null)}
         >
           <p className={cx("kb-muted")}>
-            归档内容仍保存在本机。先恢复看板和列表，再恢复其中的卡片。
+            {archiveBoardId
+              ? "归档内容仍保存在本机。先恢复列表，再恢复其中的卡片。"
+              : "归档的看板仍保存在本机，恢复后会重新出现在首页。"}
           </p>
           <div className={cx("kb-archive")}>
-            {data.boards
-              .filter((item) => item.archived)
-              .map((item) => (
+            {archivedBoards.map((item) => (
+              <ArchiveRow
+                key={item.id}
+                title={item.title}
+                kind="看板"
+                disabled={saving}
+                restore={() => void mutate({ type: "board.archive", id: item.id, archived: false })}
+              />
+            ))}
+            {archivedLists.map((item) => (
+              <ArchiveRow
+                key={item.id}
+                title={item.title}
+                kind={`列表 · ${data.boards.find((b) => b.id === item.boardId)?.title}`}
+                disabled={
+                  saving || Boolean(data.boards.find((b) => b.id === item.boardId)?.archived)
+                }
+                restore={() => void mutate({ type: "list.archive", id: item.id, archived: false })}
+              />
+            ))}
+            {archivedCards.map((item) => {
+              const list = data.lists.find((l) => l.id === item.listId)!;
+              return (
                 <ArchiveRow
                   key={item.id}
                   title={item.title}
-                  kind="看板"
-                  disabled={saving}
-                  restore={() =>
-                    void mutate({ type: "board.archive", id: item.id, archived: false })
-                  }
-                />
-              ))}
-            {data.lists
-              .filter((item) => item.archived)
-              .map((item) => (
-                <ArchiveRow
-                  key={item.id}
-                  title={item.title}
-                  kind={`列表 · ${data.boards.find((b) => b.id === item.boardId)?.title}`}
+                  kind={`卡片 · ${list.title}`}
                   disabled={
-                    saving || Boolean(data.boards.find((b) => b.id === item.boardId)?.archived)
+                    saving ||
+                    list.archived ||
+                    Boolean(data.boards.find((b) => b.id === list.boardId)?.archived)
                   }
                   restore={() =>
-                    void mutate({ type: "list.archive", id: item.id, archived: false })
+                    void mutate({ type: "card.archive", id: item.id, archived: false })
                   }
                 />
-              ))}
-            {data.cards
-              .filter((item) => item.archived)
-              .map((item) => {
-                const list = data.lists.find((l) => l.id === item.listId)!;
-                return (
-                  <ArchiveRow
-                    key={item.id}
-                    title={item.title}
-                    kind={`卡片 · ${list.title}`}
-                    disabled={
-                      saving ||
-                      list.archived ||
-                      Boolean(data.boards.find((b) => b.id === list.boardId)?.archived)
-                    }
-                    restore={() =>
-                      void mutate({ type: "card.archive", id: item.id, archived: false })
-                    }
-                  />
-                );
-              })}
-            {![...data.boards, ...data.lists, ...data.cards].some((item) => item.archived) && (
+              );
+            })}
+            {!archivedBoards.length && !archivedLists.length && !archivedCards.length && (
               <p className={cx("kb-empty-inline")}>还没有归档内容。</p>
             )}
           </div>
@@ -625,7 +675,7 @@ function Kanban({ remote }: { remote: Remote }) {
             else command = { type: dialog.type, id: dialog.id!, title };
             const result = await mutate(command);
             if (result) {
-              if (dialog.type === "board.create") setBoardId(result.createdId!);
+              if (dialog.type === "board.create") openBoard(result.createdId!);
               setDialog(null);
             }
           }}
@@ -678,7 +728,7 @@ function AddCard({
           添加卡片
         </Button>
         <Button type="button" aria-label="取消添加卡片" onClick={() => setOpen(false)}>
-          ×
+          <IconCloseOutlineRegular />
         </Button>
       </div>
     </form>
@@ -766,6 +816,7 @@ function CardDialog({
   save,
   move,
   archive,
+  changeLabels,
 }: {
   card: Card;
   data: State;
@@ -775,6 +826,7 @@ function CardDialog({
   save: (details: Details) => Promise<boolean>;
   move: (listId: string, beforeId: string | null) => Promise<boolean>;
   archive: () => Promise<boolean>;
+  changeLabels: (command: LabelCommand) => Promise<MutationResult | null>;
 }) {
   const [draft, setDraft] = useState<Details>({
     title: card.title,
@@ -789,6 +841,14 @@ function CardDialog({
     [before, setBefore] = useState("");
   const list = data.lists.find((item) => item.id === card.listId)!;
   const lists = data.lists.filter((item) => item.boardId === list.boardId && !item.archived);
+  const labels = data.labels.filter((item) => item.boardId === list.boardId);
+  const [labelsOpen, setLabelsOpen] = useState(false);
+  useEffect(() => {
+    setDraft((old) => {
+      const ids = old.labels.filter((id) => data.labels.some((label) => label.id === id));
+      return ids.length === old.labels.length ? old : { ...old, labels: ids };
+    });
+  }, [data.labels]);
   const dirty =
     JSON.stringify(draft) !==
     JSON.stringify({
@@ -863,31 +923,36 @@ function CardDialog({
         <fieldset className={cx("kb-field")}>
           <legend>标签</legend>
           <div className={cx("kb-label-options")}>
-            {colors.map((color) => (
-              <Button
-                key={color}
-                type="button"
-                className={cx(`kb-label-option kb-${color}`)}
-                aria-pressed={draft.labels.includes(color)}
-                onClick={() =>
-                  set(
-                    "labels",
-                    draft.labels.includes(color)
-                      ? draft.labels.filter((item) => item !== color)
-                      : [...draft.labels, color],
-                  )
-                }
-              >
-                {draft.labels.includes(color) ? "✓ " : ""}
-                {colorNames[color]}
-              </Button>
-            ))}
+            {draft.labels.map((id) => {
+              const label = labels.find((label) => label.id === id);
+              return label ? (
+                <Button
+                  type="button"
+                  key={id}
+                  className={cx("kb-label-toggle")}
+                  aria-label={`管理标签 ${labelTitle(label)}`}
+                  onClick={() => setLabelsOpen(true)}
+                >
+                  <LabelBadge label={label} fallback />
+                </Button>
+              ) : null;
+            })}
+            <Button
+              type="button"
+              size="sm"
+              aria-label="选择标签"
+              onClick={() => setLabelsOpen(true)}
+            >
+              <IconPlusOutlineRegular />
+              {draft.labels.length ? "标签" : "添加标签"}
+            </Button>
           </div>
         </fieldset>
         <div className={cx("kb-detail-row")}>
           <label className={cx("kb-field")}>
             截止日期
             <Input
+              className={cx("kb-date")}
               type="date"
               value={draft.due ?? ""}
               onInput={(e) => set("due", e.currentTarget.value || null)}
@@ -1002,6 +1067,7 @@ function CardDialog({
       <section className={cx("kb-card-tools")}>
         <Button type="button" aria-expanded={toolsOpen} onClick={() => setToolsOpen(!toolsOpen)}>
           移动与归档
+          <IconChevronDownOutlineRegular className={cx("kb-disclosure-icon")} />
         </Button>
         {toolsOpen && (
           <div>
@@ -1059,6 +1125,26 @@ function CardDialog({
           </div>
         )}
       </section>
+      {labelsOpen && (
+        <LabelsDialog
+          boardId={list.boardId}
+          data={data}
+          saving={saving}
+          error={error}
+          selected={draft.labels}
+          onToggle={(id) =>
+            set(
+              "labels",
+              draft.labels.includes(id)
+                ? draft.labels.filter((item) => item !== id)
+                : [...draft.labels, id],
+            )
+          }
+          onCreated={(id) => setDraft((old) => ({ ...old, labels: [...old.labels, id] }))}
+          mutate={changeLabels}
+          close={() => setLabelsOpen(false)}
+        />
+      )}
     </Modal>
   );
 }

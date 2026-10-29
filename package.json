@@ -23,7 +23,7 @@
     "@semicoder/fn-sdk": "file:./vendor/semicoder-fn-sdk-d4426323a9a8.tgz",
     "@semicoder/fn-ui": "file:./vendor/semicoder-fn-ui-8393231e8983.tgz",
     "@semicoder/fn-ui-layout": "file:./vendor/semicoder-fn-ui-layout-bf42a0aca29f.tgz",
-    "@semicoder/fn-ui-navigation": "file:./vendor/semicoder-fn-ui-navigation-6c8b2d8f88d2.tgz",
+    "@semicoder/fn-ui-navigation": "file:./vendor/semicoder-fn-ui-navigation-b54afa5620a4.tgz",
     "@types/bun": "1.4.3",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
@@ -40,6 +40,6 @@
     "@semicoder/fn-sdk": "file:./vendor/semicoder-fn-sdk-d4426323a9a8.tgz",
     "@semicoder/fn-ui": "file:./vendor/semicoder-fn-ui-8393231e8983.tgz",
     "@semicoder/fn-ui-layout": "file:./vendor/semicoder-fn-ui-layout-bf42a0aca29f.tgz",
-    "@semicoder/fn-ui-navigation": "file:./vendor/semicoder-fn-ui-navigation-6c8b2d8f88d2.tgz"
+    "@semicoder/fn-ui-navigation": "file:./vendor/semicoder-fn-ui-navigation-b54afa5620a4.tgz"
   }
 }

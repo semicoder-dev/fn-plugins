@@ -34,7 +34,7 @@ test("boards, cards, details, order and archived content survive reopening", () 
   const details = {
     title: "正式交付",
     description: "背景\n链接",
-    labels: ["blue" as const],
+    labels: [store.read().labels.find((label) => label.color === "blue")!.id],
     due: "2026-11-01",
     done: true,
     checklist: [{ id: crypto.randomUUID(), text: "验证", done: true }],
@@ -134,8 +134,142 @@ test("future database versions are not overwritten", () => {
   const { file, store } = fixture();
   const before = store.read();
   const raw = new Database(file);
-  raw.exec("PRAGMA user_version=2");
+  raw.exec("PRAGMA user_version=3");
   raw.close();
   expect(() => new KanbanStore(file)).toThrow("升级插件");
   expect(store.read()).toEqual(before);
+});
+
+test("board labels have stable identities, allow repeated colors and persist edits and display preference", () => {
+  const { store, file, run, boardId, lists } = fixture();
+  const first = run({
+    type: "label.create",
+    boardId,
+    details: { name: "  重要  ", color: "red", shade: "dark" },
+  }).createdId!;
+  const second = run({
+    type: "label.create",
+    boardId,
+    details: { name: "待确认", color: "red", shade: "dark" },
+  }).createdId!;
+  expect(first).not.toBe(second);
+  const ids = [
+    run({ type: "card.create", listId: lists[0].id, title: "一" }).createdId!,
+    run({ type: "card.create", listId: lists[1].id, title: "二" }).createdId!,
+  ];
+  for (const id of ids)
+    run({
+      type: "card.edit",
+      id,
+      details: { ...store.read().cards.find((card) => card.id === id)!, labels: [first, second] },
+    });
+  run({
+    type: "label.edit",
+    id: first,
+    details: { name: "发布", color: "purple", shade: "light" },
+  });
+  expect(store.read().cards.every((card) => card.labels.includes(first))).toBe(true);
+  expect(store.read().labels.find((label) => label.id === first)).toMatchObject({
+    name: "发布",
+    color: "purple",
+    shade: "light",
+  });
+  expect(store.read().labels.find((label) => label.id === second)?.name).toBe("待确认");
+  run({ type: "labels.display", visible: false });
+  const reopened = new KanbanStore(file);
+  stores.push(reopened);
+  expect(reopened.read()).toEqual(store.read());
+  expect(reopened.read().labelNamesVisible).toBe(false);
+});
+
+test("label assignment rejects missing, duplicate and cross-board labels; colorless labels require a name", () => {
+  const { store, run, boardId, lists } = fixture();
+  const other = run({ type: "board.create", title: "其他看板" }).createdId!;
+  const foreign = store.read().labels.find((label) => label.boardId === other)!.id;
+  const own = store.read().labels.find((label) => label.boardId === boardId)!.id;
+  const id = run({ type: "card.create", listId: lists[0].id, title: "验证关联" }).createdId!;
+  const card = store.read().cards[0];
+  const before = store.read();
+  for (const labels of [[foreign], [crypto.randomUUID()], [own, own]])
+    expect(() => run({ type: "card.edit", id, details: { ...card, labels } })).toThrow();
+  expect(() =>
+    run({ type: "label.create", boardId, details: { name: "  ", color: null, shade: "normal" } }),
+  ).toThrow("名称");
+  expect(store.read()).toEqual(before);
+  const colorless = run({
+    type: "label.create",
+    boardId,
+    details: { name: "内部", color: null, shade: "normal" },
+  }).createdId!;
+  run({ type: "card.edit", id, details: { ...card, labels: [colorless] } });
+  run({ type: "board.archive", id: boardId, archived: true });
+  expect(() =>
+    run({
+      type: "label.edit",
+      id: own,
+      details: { name: "不能改", color: "blue", shade: "normal" },
+    }),
+  ).toThrow("恢复看板");
+  expect(() => run({ type: "label.delete", id: own })).toThrow("恢复看板");
+});
+
+test("label deletion removes active and archived assignments atomically and retries only once", () => {
+  const { store, file, run, lists } = fixture();
+  const labelId = store.read().labels[0].id;
+  for (const title of ["活动卡片", "归档卡片"]) {
+    const id = run({ type: "card.create", listId: lists[0].id, title }).createdId!;
+    run({
+      type: "card.edit",
+      id,
+      details: { ...store.read().cards.find((card) => card.id === id)!, labels: [labelId] },
+    });
+    if (title === "归档卡片") run({ type: "card.archive", id, archived: true });
+  }
+  const request: Mutation = {
+    requestId: crypto.randomUUID(),
+    revision: store.read().revision,
+    command: { type: "label.delete", id: labelId },
+  };
+  const before = store.read();
+  const raw = new Database(file);
+  raw.exec(
+    "CREATE TRIGGER fail_label_save BEFORE UPDATE ON document BEGIN SELECT RAISE(ABORT,'disk failed'); END",
+  );
+  expect(() => store.mutate(request)).toThrow("disk failed");
+  expect(store.read()).toEqual(before);
+  expect(raw.query("SELECT * FROM receipts WHERE id=?").get(request.requestId)).toBeNull();
+  raw.exec("DROP TRIGGER fail_label_save");
+  raw.close();
+  const result = store.mutate(request);
+  expect(result.state.labels.some((label) => label.id === labelId)).toBe(false);
+  expect(result.state.cards.every((card) => card.labels.length === 0)).toBe(true);
+  expect(store.mutate(request)).toEqual(result);
+});
+
+test("stale label edits cannot overwrite another window and old schema is not migrated", () => {
+  const { store, file, run } = fixture();
+  const label = store.read().labels[0];
+  const request: Mutation = {
+    requestId: crypto.randomUUID(),
+    revision: store.read().revision,
+    command: {
+      type: "label.edit",
+      id: label.id,
+      details: { name: "过期", color: "green", shade: "light" },
+    },
+  };
+  run({
+    type: "label.edit",
+    id: label.id,
+    details: { name: "最新", color: "blue", shade: "dark" },
+  });
+  expect(() => store.mutate(request)).toThrow("其他窗口");
+  expect(store.read().labels[0].name).toBe("最新");
+  const raw = new Database(file);
+  raw.exec("PRAGMA user_version=1");
+  const before = raw.query("SELECT body FROM document WHERE id=1").get();
+  expect(() => new KanbanStore(file)).toThrow("不进行兼容或迁移");
+  expect(raw.query("SELECT body FROM document WHERE id=1").get()).toEqual(before);
+  expect(raw.query("PRAGMA user_version").get()).toEqual({ user_version: 1 });
+  raw.close();
 });

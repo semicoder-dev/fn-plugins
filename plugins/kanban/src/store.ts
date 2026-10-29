@@ -2,7 +2,23 @@ import { Database } from "bun:sqlite";
 import { createHash } from "node:crypto";
 import { mkdirSync } from "node:fs";
 import { dirname } from "node:path";
-import { mutation, state as stateSchema, type Mutation, type State } from "./contract.ts";
+import {
+  defaultColors,
+  mutation,
+  state as stateSchema,
+  type Mutation,
+  type State,
+} from "./contract.ts";
+
+function defaultLabels(boardId: string): State["labels"] {
+  return defaultColors.map((color) => ({
+    id: crypto.randomUUID(),
+    boardId,
+    name: "",
+    color,
+    shade: "normal",
+  }));
+}
 
 /** Plugin-owned document in SQLite: a mutation, revision and retry receipt commit together. */
 export class KanbanStore {
@@ -13,15 +29,30 @@ export class KanbanStore {
     try {
       this.db.exec("PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; PRAGMA busy_timeout=3000;");
       const version = this.db.query("PRAGMA user_version").get() as { user_version: number };
-      if (version.user_version > 1) throw new Error("看板数据由更新版本创建，请升级插件");
-      this.db.transaction(() => {
-        this.db.exec(
-          "CREATE TABLE IF NOT EXISTS document (id INTEGER PRIMARY KEY CHECK(id=1), body TEXT NOT NULL); CREATE TABLE IF NOT EXISTS receipts (id TEXT PRIMARY KEY, fingerprint TEXT NOT NULL, created_id TEXT); PRAGMA user_version=1;",
-        );
-        this.db
-          .query("INSERT OR IGNORE INTO document VALUES (1, ?)")
-          .run(JSON.stringify({ revision: 0, boards: [], lists: [], cards: [] }));
-      })();
+      if (version.user_version > 2) throw new Error("看板数据由更新版本创建，请升级插件");
+      if (version.user_version === 1) throw new Error("旧看板数据格式不受支持，不进行兼容或迁移");
+      this.db
+        .transaction(() => {
+          this.db.exec(
+            "CREATE TABLE IF NOT EXISTS document (id INTEGER PRIMARY KEY CHECK(id=1), body TEXT NOT NULL); CREATE TABLE IF NOT EXISTS receipts (id TEXT PRIMARY KEY, fingerprint TEXT NOT NULL, created_id TEXT);",
+          );
+          this.db.query("INSERT OR IGNORE INTO document VALUES (1, ?)").run(
+            JSON.stringify({
+              revision: 0,
+              boards: [],
+              lists: [],
+              cards: [],
+              labels: [],
+              labelNamesVisible: true,
+            }),
+          );
+          const row = this.db.query("SELECT body FROM document WHERE id=1").get() as {
+            body: string;
+          };
+          stateSchema.parse(JSON.parse(row.body));
+          this.db.exec("PRAGMA user_version=2");
+        })
+        .immediate();
       this.read();
     } catch (error) {
       this.db.close();
@@ -78,6 +109,7 @@ export class KanbanStore {
           case "board.create": {
             createdId = crypto.randomUUID();
             state.boards.push({ id: createdId, title: c.title, archived: false });
+            state.labels.push(...defaultLabels(createdId));
             for (const title of ["待办", "进行中", "已完成"])
               state.lists.push({
                 id: crypto.randomUUID(),
@@ -92,6 +124,34 @@ export class KanbanStore {
             break;
           case "board.archive":
             board(c.id).archived = c.archived;
+            break;
+          case "label.create":
+            activeBoard(c.boardId);
+            if (state.labels.filter((label) => label.boardId === c.boardId).length >= 100)
+              throw new Error("每个看板最多 100 个标签");
+            createdId = crypto.randomUUID();
+            state.labels.push({ id: createdId, boardId: c.boardId, ...c.details });
+            break;
+          case "label.edit": {
+            const label = required(state.labels, c.id);
+            activeBoard(label.boardId);
+            Object.assign(label, c.details);
+            break;
+          }
+          case "label.delete": {
+            const label = required(state.labels, c.id);
+            activeBoard(label.boardId);
+            state.labels.splice(state.labels.indexOf(label), 1);
+            for (const card of state.cards) {
+              if (card.labels.includes(c.id)) {
+                card.labels = card.labels.filter((id) => id !== c.id);
+                card.updatedAt = Date.now();
+              }
+            }
+            break;
+          }
+          case "labels.display":
+            state.labelNamesVisible = c.visible;
             break;
           case "list.create":
             activeBoard(c.boardId);
@@ -136,9 +196,15 @@ export class KanbanStore {
               updatedAt: Date.now(),
             });
             break;
-          case "card.edit":
-            Object.assign(activeCard(c.id), c.details, { updatedAt: Date.now() });
+          case "card.edit": {
+            const value = activeCard(c.id);
+            const boardId = list(value.listId).boardId;
+            for (const id of c.details.labels)
+              if (required(state.labels, id).boardId !== boardId)
+                throw new Error("标签不属于当前看板");
+            Object.assign(value, c.details, { updatedAt: Date.now() });
             break;
+          }
           case "card.archive": {
             const value = card(c.id);
             activeList(value.listId);

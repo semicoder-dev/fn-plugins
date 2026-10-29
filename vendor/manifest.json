@@ -1,6 +1,5 @@
 {
   "source": "https://github.com/semicoder-dev/fn",
-  "commit": "2d677427cbc3e2e7041d0f43ae2c5a73baa43924",
   "purpose": "Unpublished plugins-v1 development artifacts; never substitute public packages of the same version.",
   "packages": [
     {
@@ -8,57 +7,111 @@
       "version": "0.4.0",
       "sourcePath": "packages/sdk",
       "archive": "semicoder-fn-sdk-d4426323a9a8.tgz",
-      "sha256": "d4426323a9a864d712aa7c62a24261862f6e28ef6b20f00396f4b056c9d55ec7"
+      "sha256": "d4426323a9a864d712aa7c62a24261862f6e28ef6b20f00396f4b056c9d55ec7",
+      "sourceEvidence": {
+        "baseCommit": "2d677427cbc3e2e7041d0f43ae2c5a73baa43924",
+        "state": "Existing fixed development snapshot retained unchanged; this recorded baseline is not an assertion that the archive matches that commit. The archive SHA-256 identifies its exact contents."
+      }
     },
     {
       "name": "@semicoder/fn-host",
       "version": "0.0.0",
       "sourcePath": "packages/host",
       "archive": "semicoder-fn-host-2d67742.tgz",
-      "sha256": "0f33440551756ecaee1ec227921d85b9ebc7d8eb205923721fa6f1f0734126bf"
+      "sha256": "0f33440551756ecaee1ec227921d85b9ebc7d8eb205923721fa6f1f0734126bf",
+      "sourceEvidence": {
+        "baseCommit": "2d677427cbc3e2e7041d0f43ae2c5a73baa43924",
+        "state": "Existing fixed development snapshot retained unchanged; this recorded baseline is not an assertion that the archive matches that commit. The archive SHA-256 identifies its exact contents."
+      }
     },
     {
       "name": "@semicoder/fn-rpc",
       "version": "0.0.0",
       "sourcePath": "plugins/rpc",
       "archive": "semicoder-fn-rpc-2d67742.tgz",
-      "sha256": "30eb8ce6f72a91a25df04e4c17966f021ee071bb4b0fa71c7f471dd4e568ec15"
+      "sha256": "30eb8ce6f72a91a25df04e4c17966f021ee071bb4b0fa71c7f471dd4e568ec15",
+      "sourceEvidence": {
+        "baseCommit": "2d677427cbc3e2e7041d0f43ae2c5a73baa43924",
+        "state": "Existing fixed development snapshot retained unchanged; this recorded baseline is not an assertion that the archive matches that commit. The archive SHA-256 identifies its exact contents."
+      }
     },
     {
       "name": "@semicoder/fn-activity",
       "version": "0.0.0",
       "sourcePath": "plugins/activity",
       "archive": "semicoder-fn-activity-2d67742.tgz",
-      "sha256": "777b856f27421211d0fea3a4593880546b18f5753f362da712d16fc15ce9a3e3"
+      "sha256": "777b856f27421211d0fea3a4593880546b18f5753f362da712d16fc15ce9a3e3",
+      "sourceEvidence": {
+        "baseCommit": "2d677427cbc3e2e7041d0f43ae2c5a73baa43924",
+        "state": "Existing fixed development snapshot retained unchanged; this recorded baseline is not an assertion that the archive matches that commit. The archive SHA-256 identifies its exact contents."
+      }
     },
     {
       "name": "@semicoder/fn-ui-layout",
       "version": "0.0.0",
       "sourcePath": "plugins/ui-layout",
       "archive": "semicoder-fn-ui-layout-bf42a0aca29f.tgz",
-      "sha256": "bf42a0aca29f3ab0aeea12098627660ce068da987815a25150fc3e3ed31bb570"
+      "sha256": "bf42a0aca29f3ab0aeea12098627660ce068da987815a25150fc3e3ed31bb570",
+      "sourceEvidence": {
+        "baseCommit": "2d677427cbc3e2e7041d0f43ae2c5a73baa43924",
+        "state": "Existing fixed development snapshot retained unchanged; this recorded baseline is not an assertion that the archive matches that commit. The archive SHA-256 identifies its exact contents."
+      }
     },
     {
       "name": "@semicoder/fn-ui-navigation",
       "version": "0.0.0",
       "sourcePath": "plugins/ui-navigation",
-      "archive": "semicoder-fn-ui-navigation-6c8b2d8f88d2.tgz",
-      "sha256": "6c8b2d8f88d2f16f5cb1f59ccce3b950107902906ccb2462449351e1b44849c4"
+      "archive": "semicoder-fn-ui-navigation-b54afa5620a4.tgz",
+      "sha256": "b54afa5620a43f1a7f5d563f0ce7a6559e16725f0fabc8e3dcc119d85f6a4c93",
+      "sourceEvidence": {
+        "baseCommit": "11006b4018fe4062ff0d94ae25e17757768b83c0",
+        "state": "Uncommitted navigation UI refinement on this base commit, packed with Bun 1.4.3 on 2026-10-29; src/view.tsx and src/style.module.css are bundled into consuming plugins.",
+        "files": [
+          {
+            "path": "package.json",
+            "sha256": "8b20c2a5cfabb984e39108c8a15bcb2f88c0e9146ae22f1cc20056754b919ffb"
+          },
+          {
+            "path": "dist/client.js",
+            "sha256": "c85b357259af8a374f5dc14197da22745c8e7e76fa509205d5824c78c1a97d89"
+          },
+          {
+            "path": "src/client.tsx",
+            "sha256": "a49a3fb4aedabaf2c8a4c2ebe4f32a954e202a0002387406a22f7b74a864beb8"
+          },
+          {
+            "path": "src/style.module.css",
+            "sha256": "0c8252ddfb3fc7f482da713c46b1f6e97157319af1d1e8a0b4757431c1bfc1b8"
+          },
+          {
+            "path": "src/view.tsx",
+            "sha256": "e0c9d7bc7a26b3c9fc48afe5a17bdc5ae253fac3d14c0d81740ee8e3bbbbc96b"
+          }
+        ]
+      }
     },
     {
       "name": "@semicoder/fia",
       "version": "0.18.0",
       "sourcePath": "framework/fia/packages/cli",
       "archive": "semicoder-fia-2d67742.tgz",
-      "sha256": "bdb0f67840176281b6015837bfe1067554266645724e9ed266e733ebbb9cca7f"
+      "sha256": "bdb0f67840176281b6015837bfe1067554266645724e9ed266e733ebbb9cca7f",
+      "sourceEvidence": {
+        "baseCommit": "2d677427cbc3e2e7041d0f43ae2c5a73baa43924",
+        "state": "Existing fixed development snapshot retained unchanged; this recorded baseline is not an assertion that the archive matches that commit. The archive SHA-256 identifies its exact contents."
+      }
     },
     {
       "name": "@semicoder/fn-ui",
       "version": "0.0.0",
       "sourcePath": "packages/ui",
       "archive": "semicoder-fn-ui-8393231e8983.tgz",
-      "sha256": "8393231e89832c30cfc70d3fecb37ff8b439b8e7b3e03cf3e8358d0a3b571014"
+      "sha256": "8393231e89832c30cfc70d3fecb37ff8b439b8e7b3e03cf3e8358d0a3b571014",
+      "sourceEvidence": {
+        "baseCommit": "2d677427cbc3e2e7041d0f43ae2c5a73baa43924",
+        "state": "Existing fixed development snapshot retained unchanged; this recorded baseline is not an assertion that the archive matches that commit. The archive SHA-256 identifies its exact contents."
+      }
     }
   ],
-  "sourceState": "Uncommitted UI migration on the recorded base commit; each archive is fixed by SHA-256, not a public package."
+  "sourceState": "Mixed unpublished development snapshots; source evidence is recorded per package, and each archive is fixed by SHA-256. No public package is substituted."
 }
