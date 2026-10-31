@@ -1,5 +1,7 @@
 # fn 官方插件市场
 
+新增 [模型目录](plugins/models-dev/README.md)（`@semicoder/fn-models-dev` 0.1.0 本地候选）：通过 models.dev 官方 API 浏览模型规格、筛选排序和供应商价格，缓存支持离线查看。
+
 首个正式应用是 [看板](plugins/kanban/README.md)：`fn-kanban` / `@semicoder/fn-kanban`，初始候选版本 0.1.0。它是完整的双端 Cordis 插件，使用自己的 SQLite 保存本地看板，通过原版 Slots 提供页面。无需模型或云账号。
 
 适用宿主为 fn `codex/all-plugins` 的全插件化候选（基线 `2d67742`），**不适用于公开 fn 0.5.2 / SDK 0.4.0 的旧契约**。本仓库使用 `vendor/manifest.json` 固定的开发归档和锁文件，安装/构建不读取相邻 fn 源码。归档是开发契约快照，不是同版本公开包；FIA 归档不含原生 Host/Bun，不能用来发行应用。
@@ -16,6 +18,7 @@ bun run check
 bun run test
 bun run pack
 # 输出 artifacts/semicoder-fn-kanban-0.1.0.tgz
+# 以及 artifacts/semicoder-fn-models-dev-0.1.0.tgz
 # 在全插件化候选宿主“应用中心 → 从地址安装”中填写归档绝对路径。
 ```
 

@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "check": "bun scripts/check.ts && tsc --noEmit && oxfmt --check",
-    "test": "bun test plugins/kanban/tests",
+    "test": "bun test plugins",
     "build": "bun scripts/build.ts",
     "pack": "bun scripts/build.ts --pack",
     "market:local": "bun scripts/local-market.ts",

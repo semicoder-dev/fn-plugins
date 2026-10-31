@@ -11,5 +11,5 @@
     "types": ["bun"],
     "lib": ["ESNext", "DOM"]
   },
-  "include": ["plugins/kanban/src", "plugins/kanban/tests", "scripts"]
+  "include": ["plugins/*/src", "plugins/*/tests", "scripts"]
 }

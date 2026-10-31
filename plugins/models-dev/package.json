@@ -1,0 +1,42 @@
+{
+  "name": "@semicoder/fn-models-dev",
+  "version": "0.1.0",
+  "description": "通过 models.dev API 浏览模型规格、能力与供应商价格。",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/semicoder-dev/fn-plugins.git",
+    "directory": "plugins/models-dev"
+  },
+  "files": [
+    "src",
+    "dist",
+    "README.md"
+  ],
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./dist/client.js",
+    "./contract": "./src/contract.ts"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "4.0.5",
+    "@deepseek-ai/dsh-client-ui-slots": "0.2.1-rc.2",
+    "@semicoder/fia": "0.18.0",
+    "@semicoder/fn-activity": "0.0.0",
+    "@semicoder/fn-host": "0.0.0",
+    "@semicoder/fn-rpc": "0.0.0",
+    "@semicoder/fn-sdk": "0.4.0",
+    "@semicoder/fn-ui": "0.0.0",
+    "@semicoder/fn-ui-layout": "0.0.0",
+    "@semicoder/fn-ui-navigation": "0.0.0",
+    "react": "19.2.7"
+  },
+  "engines": {
+    "bun": ">=1.4.3"
+  },
+  "fn": {
+    "name": "模型目录",
+    "description": "通过 models.dev API 浏览模型规格、能力与供应商价格。",
+    "iconSvg": "dist/icon.svg"
+  }
+}
