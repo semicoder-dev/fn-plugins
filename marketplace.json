@@ -1,5 +1,50 @@
 {
   "schemaVersion": 3,
   "name": "fn 官方插件市场",
-  "plugins": []
+  "plugins": [
+    {
+      "packageName": "@semicoder/fn-kanban",
+      "name": "看板",
+      "description": "本地看板，用列表和卡片整理工作，支持拖动、标签、截止日期与检查清单。",
+      "version": "0.1.0",
+      "url": "https://github.com/semicoder-dev/fn-plugins/releases/download/kanban-v0.1.0/semicoder-fn-kanban-0.1.0.tgz",
+      "sha256": "15caa3ceba06da0a9965792d01e8a98c5d6309f5cb4fbadb8f881a5a219e325a",
+      "peers": {
+        "@deepseek-ai/cordis": "4.0.5",
+        "@deepseek-ai/dsh-client-ui-slots": "0.2.1-rc.2",
+        "@semicoder/fia": "0.18.0",
+        "@semicoder/fn-activity": "0.0.0",
+        "@semicoder/fn-host": "0.0.0",
+        "@semicoder/fn-rpc": "0.0.0",
+        "@semicoder/fn-sdk": "0.5.0",
+        "@semicoder/fn-ui": "0.0.0",
+        "@semicoder/fn-ui-layout": "0.0.0",
+        "@semicoder/fn-ui-navigation": "0.0.0",
+        "react": "19.2.7"
+      },
+      "iconSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"4\"/><path d=\"M8 7v10M12 7v6M16 7v8\"/></svg>\n"
+    },
+    {
+      "packageName": "@semicoder/fn-models-dev",
+      "name": "模型目录",
+      "description": "通过 models.dev API 浏览模型规格、能力与供应商价格。",
+      "version": "0.1.0",
+      "url": "https://github.com/semicoder-dev/fn-plugins/releases/download/models-dev-v0.1.0/semicoder-fn-models-dev-0.1.0.tgz",
+      "sha256": "7b79ee1fab900f712922826df59cb0956a5c4c25329687eca6462f9b1ca589a9",
+      "peers": {
+        "@deepseek-ai/cordis": "4.0.5",
+        "@deepseek-ai/dsh-client-ui-slots": "0.2.1-rc.2",
+        "@semicoder/fia": "0.18.0",
+        "@semicoder/fn-activity": "0.0.0",
+        "@semicoder/fn-host": "0.0.0",
+        "@semicoder/fn-rpc": "0.0.0",
+        "@semicoder/fn-sdk": "0.5.0",
+        "@semicoder/fn-ui": "0.0.0",
+        "@semicoder/fn-ui-layout": "0.0.0",
+        "@semicoder/fn-ui-navigation": "0.0.0",
+        "react": "19.2.7"
+      },
+      "iconSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m12 3 9 5-9 5-9-5 9-5Z M3 12l9 5 9-5 M3 16l9 5 9-5\"/></svg>\n"
+    }
+  ]
 }
