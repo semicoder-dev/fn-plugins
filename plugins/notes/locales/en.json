@@ -1,0 +1,21 @@
+{
+  "app.name": "Notes",
+  "app.description": "Keep your ideas on this device",
+  "empty": "Open the application to get started",
+  "count": "Notes",
+  "untitled": "Untitled",
+  "new": "New note",
+  "search": "Search notes…",
+  "emptyNote": "Empty note",
+  "unsaved": "Unsaved changes",
+  "saved": "Saved on this device",
+  "saving": "Saving…",
+  "save": "Save",
+  "delete": "Delete",
+  "deleteConfirm": "Delete this note?",
+  "title": "Title",
+  "body": "Write your thoughts…",
+  "welcome": "Keep every idea",
+  "discard": "Discard unsaved changes?",
+  "conflict": "This note changed in another view. Reopen it before editing."
+}

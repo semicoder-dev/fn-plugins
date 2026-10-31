@@ -3,13 +3,18 @@ import type { Command, State } from "./contract.ts";
 export type DragItem = { kind: "card" | "list"; id: string };
 export type DragLayout = { lists: string[]; cards: Record<string, string[]> };
 
-export function boardLayout(lists: State["lists"], cards: State["cards"]): DragLayout {
+export function boardLayout(
+  lists: State["lists"],
+  cards: State["cards"],
+): DragLayout {
   return {
     lists: lists.map((list) => list.id),
     cards: Object.fromEntries(
       lists.map((list) => [
         list.id,
-        cards.filter((card) => card.listId === list.id && !card.archived).map((card) => card.id),
+        cards
+          .filter((card) => card.listId === list.id && !card.archived)
+          .map((card) => card.id),
       ]),
     ),
   };
@@ -32,7 +37,9 @@ export function placeItem(
   if (item.kind === "list") {
     if (!layout.lists.includes(item.id)) return layout;
     const lists = insert(layout.lists);
-    return lists.every((id, index) => id === layout.lists[index]) ? layout : { ...layout, lists };
+    return lists.every((id, index) => id === layout.lists[index])
+      ? layout
+      : { ...layout, lists };
   }
   const source = layout.lists.find((id) => layout.cards[id].includes(item.id));
   if (
@@ -42,7 +49,10 @@ export function placeItem(
   )
     return layout;
   const target = insert(layout.cards[listId]);
-  if (source === listId && target.every((id, index) => id === layout.cards[listId][index]))
+  if (
+    source === listId &&
+    target.every((id, index) => id === layout.cards[listId][index])
+  )
     return layout;
   return {
     ...layout,
@@ -60,7 +70,8 @@ export function moveCommand(
   item: DragItem,
 ): Command | null {
   if (item.kind === "list") {
-    if (original.lists.every((id, index) => id === next.lists[index])) return null;
+    if (original.lists.every((id, index) => id === next.lists[index]))
+      return null;
     return {
       type: "list.move",
       id: item.id,
@@ -73,14 +84,19 @@ export function moveCommand(
   const beforeId = next.cards[listId][index + 1] ?? null;
   if (
     original.cards[listId].includes(item.id) &&
-    (original.cards[listId][original.cards[listId].indexOf(item.id) + 1] ?? null) === beforeId
+    (original.cards[listId][original.cards[listId].indexOf(item.id) + 1] ??
+      null) === beforeId
   )
     return null;
   return { type: "card.move", id: item.id, listId, beforeId };
 }
 
 // A time-based ramp keeps scrolling consistent on both 60 Hz and 120 Hz displays.
-export function edgeVelocity(point: number, start: number, end: number): number {
+export function edgeVelocity(
+  point: number,
+  start: number,
+  end: number,
+): number {
   const edge = Math.min(64, (end - start) / 3);
   if (point < start || point > end || edge <= 0) return 0;
   if (point < start + edge) return -720 * ((start + edge - point) / edge) ** 2;

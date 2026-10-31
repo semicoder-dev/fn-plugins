@@ -1,0 +1,21 @@
+{
+  "name": "@semicoder/fn-translate",
+  "version": "0.2.0",
+  "type": "module",
+  "files": [
+    "src",
+    "locales",
+    "widgets"
+  ],
+  "dependencies": {
+    "@semicoder/fn-sdk": "0.6.0"
+  },
+  "devDependencies": {
+    "@semicoder/fn-ui": "0.1.0",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  },
+  "engines": {
+    "bun": ">=1.4.4"
+  }
+}

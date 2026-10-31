@@ -1,0 +1,33 @@
+{
+  "manifestVersion": 1,
+  "id": "fn-kanban",
+  "version": "0.2.0",
+  "hostApi": 1,
+  "name": {
+    "key": "app.name"
+  },
+  "description": {
+    "key": "app.description"
+  },
+  "entries": {
+    "backend": "src/backend.ts",
+    "page": "src/page.tsx"
+  },
+  "locales": {
+    "default": "zh-CN",
+    "messages": {
+      "zh-CN": "locales/zh-CN.json",
+      "en": "locales/en.json"
+    }
+  },
+  "uses": ["widgets.publish"],
+  "contributes": {
+    "widgets": [
+      {
+        "id": "summary",
+        "size": "1x1",
+        "initial": "widgets/summary.json"
+      }
+    ]
+  }
+}

@@ -3,43 +3,24 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "check": "bun scripts/check.ts && tsc --noEmit && oxfmt --check",
+    "check": "tsc --noEmit && bun scripts/check.ts && bun fmt --no-script --check plugins examples scripts package.json tsconfig.json",
     "test": "bun test plugins",
     "build": "bun scripts/build.ts",
     "pack": "bun scripts/build.ts --pack",
     "market:local": "bun scripts/local-market.ts",
-    "index:check": "bun scripts/check.ts",
-    "fmt": "oxfmt"
+    "fmt": "bun fmt --no-script plugins examples scripts package.json tsconfig.json"
   },
   "devDependencies": {
-    "@deepseek-ai/cordis": "4.0.5",
-    "@deepseek-ai/dsh-client-store": "0.2.1-rc.2",
-    "@deepseek-ai/dsh-client-ui-renderer": "0.2.1-rc.2",
-    "@deepseek-ai/dsh-client-ui-slots": "0.2.1-rc.2",
-    "@semicoder/fia": "file:./vendor/semicoder-fia-5e9a50c30faf.tgz",
-    "@semicoder/fn-activity": "file:./vendor/semicoder-fn-activity-c959616fdf76.tgz",
-    "@semicoder/fn-host": "file:./vendor/semicoder-fn-host-3bce215e32e5.tgz",
-    "@semicoder/fn-rpc": "file:./vendor/semicoder-fn-rpc-aa2b6c539f4d.tgz",
-    "@semicoder/fn-sdk": "0.5.0",
-    "@semicoder/fn-ui": "file:./vendor/semicoder-fn-ui-abbf2691ee0d.tgz",
-    "@semicoder/fn-ui-layout": "file:./vendor/semicoder-fn-ui-layout-22ce2af6d2aa.tgz",
-    "@semicoder/fn-ui-navigation": "file:./vendor/semicoder-fn-ui-navigation-d91d969b26aa.tgz",
-    "@types/bun": "1.4.3",
+    "@semicoder/fn-sdk": "0.6.0",
+    "@semicoder/fn-ui": "0.1.0",
+    "@types/bun": "1.4.0",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
-    "oxfmt": "0.68.0",
     "react": "19.2.7",
     "react-dom": "19.2.7",
-    "typescript": "5.9.3"
+    "typescript": "7.0.2"
   },
-  "overrides": {
-    "@semicoder/fia": "file:./vendor/semicoder-fia-5e9a50c30faf.tgz",
-    "@semicoder/fn-activity": "file:./vendor/semicoder-fn-activity-c959616fdf76.tgz",
-    "@semicoder/fn-host": "file:./vendor/semicoder-fn-host-3bce215e32e5.tgz",
-    "@semicoder/fn-rpc": "file:./vendor/semicoder-fn-rpc-aa2b6c539f4d.tgz",
-    "@semicoder/fn-sdk": "0.5.0",
-    "@semicoder/fn-ui": "file:./vendor/semicoder-fn-ui-abbf2691ee0d.tgz",
-    "@semicoder/fn-ui-layout": "file:./vendor/semicoder-fn-ui-layout-22ce2af6d2aa.tgz",
-    "@semicoder/fn-ui-navigation": "file:./vendor/semicoder-fn-ui-navigation-d91d969b26aa.tgz"
+  "engines": {
+    "bun": ">=1.4.4"
   }
 }

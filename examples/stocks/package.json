@@ -1,0 +1,14 @@
+{
+  "name": "fn-stock-example",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "files": [
+    "src",
+    "locales",
+    "widgets"
+  ],
+  "dependencies": {
+    "@semicoder/fn-sdk": "0.6.0"
+  }
+}

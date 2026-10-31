@@ -1,43 +1,21 @@
 {
   "name": "@semicoder/fn-kanban",
-  "version": "0.1.1",
-  "description": "本地看板，用列表和卡片整理工作，支持拖动、标签、截止日期与检查清单。",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/semicoder-dev/fn-plugins.git",
-    "directory": "plugins/kanban"
-  },
+  "version": "0.2.0",
+  "type": "module",
   "files": [
     "src",
-    "dist",
-    "README.md",
-    "acceptance.md"
+    "locales",
+    "widgets"
   ],
-  "type": "module",
-  "exports": {
-    ".": "./src/index.ts",
-    "./client": "./dist/client.js",
-    "./contract": "./src/contract.ts"
+  "dependencies": {
+    "@semicoder/fn-sdk": "0.6.0"
   },
-  "peerDependencies": {
-    "@deepseek-ai/cordis": "4.0.5",
-    "@deepseek-ai/dsh-client-ui-slots": "0.2.1-rc.2",
-    "@semicoder/fia": "0.18.0",
-    "@semicoder/fn-activity": "0.0.0",
-    "@semicoder/fn-host": "0.0.0",
-    "@semicoder/fn-rpc": "0.0.0",
-    "@semicoder/fn-sdk": "0.5.0",
-    "@semicoder/fn-ui": "0.0.0",
-    "@semicoder/fn-ui-layout": "0.0.0",
-    "@semicoder/fn-ui-navigation": "0.0.0",
-    "react": "19.2.7"
+  "devDependencies": {
+    "@semicoder/fn-ui": "0.1.0",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
   },
   "engines": {
-    "bun": ">=1.4.3"
-  },
-  "fn": {
-    "name": "看板",
-    "description": "用列表和卡片整理工作，所有内容保存在本机。",
-    "iconSvg": "dist/icon.svg"
+    "bun": ">=1.4.4"
   }
 }

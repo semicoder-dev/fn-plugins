@@ -1,9 +1,22 @@
-import { defineAPI, z } from "@semicoder/fia/api";
+import { defineContract, method, z } from "@semicoder/fn-sdk/contract";
 
 const id = z.string().uuid();
 const title = z.string().trim().min(1, "请输入名称").max(200);
-export const defaultColors = ["green", "blue", "purple", "yellow", "orange", "red"] as const;
-export const colors = [...defaultColors, "sky", "lime", "pink", "gray"] as const;
+export const defaultColors = [
+  "green",
+  "blue",
+  "purple",
+  "yellow",
+  "orange",
+  "red",
+] as const;
+export const colors = [
+  ...defaultColors,
+  "sky",
+  "lime",
+  "pink",
+  "gray",
+] as const;
 export const colorNames = {
   green: "绿色",
   blue: "蓝色",
@@ -23,14 +36,20 @@ export const labelDetails = z
     color: z.enum(colors).nullable(),
     shade: z.enum(shades),
   })
-  .refine((value) => value.color !== null || Boolean(value.name), "无色标签需要填写名称");
+  .refine(
+    (value) => value.color !== null || Boolean(value.name),
+    "无色标签需要填写名称",
+  );
 export const label = z.object({ id, boardId: id, ...labelDetails.shape });
 export type Label = z.infer<typeof label>;
 export type LabelDetails = z.infer<typeof labelDetails>;
 const checklist = z
   .array(z.object({ id, text: title, done: z.boolean() }))
   .max(100)
-  .refine((items) => new Set(items.map((item) => item.id)).size === items.length, "检查项 ID 重复");
+  .refine(
+    (items) => new Set(items.map((item) => item.id)).size === items.length,
+    "检查项 ID 重复",
+  );
 export const cardDetails = z.object({
   title,
   description: z.string().max(20000),
@@ -66,7 +85,11 @@ export const command = z.discriminatedUnion("type", [
   z.object({ type: z.literal("board.create"), title }),
   z.object({ type: z.literal("board.rename"), id, title }),
   z.object({ type: z.literal("board.archive"), id, archived: z.boolean() }),
-  z.object({ type: z.literal("label.create"), boardId: id, details: labelDetails }),
+  z.object({
+    type: z.literal("label.create"),
+    boardId: id,
+    details: labelDetails,
+  }),
   z.object({ type: z.literal("label.edit"), id, details: labelDetails }),
   z.object({ type: z.literal("label.delete"), id }),
   z.object({ type: z.literal("labels.display"), visible: z.boolean() }),
@@ -77,7 +100,12 @@ export const command = z.discriminatedUnion("type", [
   z.object({ type: z.literal("card.create"), listId: id, title }),
   z.object({ type: z.literal("card.edit"), id, details: cardDetails }),
   z.object({ type: z.literal("card.archive"), id, archived: z.boolean() }),
-  z.object({ type: z.literal("card.move"), id, listId: id, beforeId: id.nullable() }),
+  z.object({
+    type: z.literal("card.move"),
+    id,
+    listId: id,
+    beforeId: id.nullable(),
+  }),
 ]);
 export type Command = z.infer<typeof command>;
 export const mutation = z.object({
@@ -87,16 +115,10 @@ export const mutation = z.object({
 });
 export type Mutation = z.infer<typeof mutation>;
 export type MutationResult = { state: State; createdId?: string };
-export default defineAPI({
-  methods: {
-    read: { description: "读取本机看板", input: z.object({}), output: state },
-    mutate: {
-      description: "事务保存看板变更",
-      input: mutation,
-      output: z.object({ state, createdId: id.optional() }),
-    },
-  },
-  events: {
-    changed: { description: "本地看板已保存", payload: z.object({ revision: z.number() }) },
-  },
+export default defineContract({
+  read: method({ input: z.object({}), output: state }),
+  mutate: method({
+    input: mutation,
+    output: z.object({ state, createdId: id.optional() }),
+  }),
 });

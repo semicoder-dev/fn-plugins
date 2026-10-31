@@ -7,3 +7,9 @@ artifacts/
 # Fixed SDK snapshot for independent development before npm publication.
 !vendor/
 !vendor/*.tgz
+
+plugins/*/.fn-build/
+plugins/*/.fn-entry.html
+
+examples/*/.fn-build/
+examples/*/.fn-entry.html

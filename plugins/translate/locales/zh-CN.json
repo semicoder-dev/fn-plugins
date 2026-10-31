@@ -1,0 +1,19 @@
+{
+  "app.name": "翻译",
+  "app.description": "使用 ChatGPT 账号翻译文字",
+  "empty": "打开应用，开始使用",
+  "auto": "自动检测",
+  "target": "目标语言",
+  "english": "英语",
+  "chinese": "简体中文",
+  "translating": "翻译中…",
+  "translate": "翻译",
+  "cancel": "停止",
+  "cancelled": "已停止，未保存本次译文",
+  "source": "原文",
+  "placeholder": "输入要翻译的内容…",
+  "result": "译文将显示在这里",
+  "copy": "复制",
+  "copied": "已复制",
+  "history": "最近翻译"
+}

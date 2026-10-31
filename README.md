@@ -1,29 +1,32 @@
-# fn 官方插件市场
+# Fn 官方应用
 
-新增 [模型目录](plugins/models-dev/README.md)（`@semicoder/fn-models-dev` 0.1.1）：通过 models.dev 官方 API 浏览模型规格、筛选排序和供应商价格，缓存支持离线查看。
-
-首个正式应用是 [看板](plugins/kanban/README.md)：`fn-kanban` / `@semicoder/fn-kanban`，版本 0.1.1。它是完整的双端 Cordis 插件，使用自己的 SQLite 保存本地看板，通过原版 Slots 提供页面。无需模型或云账号。
-
-适用宿主为 **fn 0.6.0 / SDK 0.5.0**，不兼容 fn 0.5.2 / SDK 0.4.0 的旧契约。SDK 精确消费公开 npm 0.5.0；其他尚未独立发布的宿主契约由 `vendor/manifest.json` 固定归档和锁文件提供，安装/构建不读取相邻 fn 源码。固定归档不能用同版本 npm 包替代；FIA 类型归档不含原生 Host/Bun，不能用来发行应用。
-
-UI 统一从 `@semicoder/fn-ui` 使用原版 dsh 控件和宿主主题，精确声明 peer；SDK 不再导出 UI。看板使用 CSS Modules、语义 token 和共享 Menu/Modal，不携带另一套控件、React 或主题。`check` 同时阻止旧 UI 依赖、token 和替代控件回流。当前固定契约从 fn `8e255e5` 的默认构建 seed 统一导出，转换规则与 SHA-256 记录于 manifest；不包含 FIA 原生发行资产。
-
-正式索引 `marketplace.json` 使用 schema 3，只有正式发布并验证归档后才登记。`market:local` 使用真实看板包生成独立的 HTTPS 验收市场。翻译、随手记和网络搜索测试插件保持删除；历史标签与已发布附件保留。
-
-新插件使用普通 npm Cordis 契约，自有包名为 `@semicoder/fn-<能力名>`。插件实例 ID 由 profile 配置，不等同于包名。后端、前端和双端插件均可发布；前端通过原版 dsh Slots 贡献界面。验证后的新插件再按独立发布流程登记，不允许将测试夹具上架。
+翻译、笔记、看板以独立 TypeScript 应用交付。宿主统一模型、窗口、UI、小组件和手机文字路由；应用管理业务与 Bun SQLite 数据。三个应用使用 SDK 0.6.0 与 Fn UI 0.1.0 的精确 npm 依赖，适用于 Fn 0.7。
 
 ```sh
 bun install --frozen-lockfile --ignore-scripts
 bun run check
 bun run test
 bun run pack
-# 输出 artifacts/semicoder-fn-kanban-0.1.1.tgz
-# 以及 artifacts/semicoder-fn-models-dev-0.1.1.tgz
-# 在fn 0.6 宿主“应用中心 → 从地址安装”中填写归档绝对路径。
+bun run market:local
 ```
 
-本地市场验收使用 `bun run market:local --cert <localhost-cert.pem> --key <key.pem>`，将输出的 HTTPS 地址添加到隔离开发宿主。证书必须被该验收进程信任；不要关闭 TLS 验证或提交私钥。源文件、构建包和安装目录分开，重新打包后通过市场更新或地址更新加载。
+在 Fn 开发实例的应用中心添加本地市场输出的 loopback 地址，或安装各应用根目录的 `.fn.tgz`。正式市场为 `https://semicoder-dev.github.io/fn-plugins/applications.json`。Bun 1.4.4 内置构建和格式化，页面自包含 React、SDK、Fn UI。
 
-日常 fn Dev 的源码监听只更新宿主及默认组合，不自动替换独立安装的看板。开发归档即使仍标为 0.1.1，内容也可能不同；重新 `pack` 后，在“已安装”中更新原记录，等待更新完成；fn 0.6.1 通常局部生效，无法安全热更新时仍会重启后台。交付验收应核对已安装 `dist/client.js` 与本轮归档的 SHA-256，并验证数据保留；隔离宿主安装通过不代表日常 Dev 已使用新包。
+| 应用 | 能力 |
+| --- | --- |
+| translate | ChatGPT 订阅 Responses 翻译、历史、计数小组件、手机翻译入口 |
+| notes | 笔记编辑、搜索、持久化、冲突检查、摘要小组件 |
+| kanban | 多看板、列表、拖动、卡片详情、标签、日期、检查清单与归档 |
+| examples/stocks | 无页面后台示例，生成明确标注的模拟行情小组件；不连接真实金融数据 |
 
-历史 `marketplace-cordis.json` 原样保留给 fn 0.5.x，历史标签和附件不改动。新版不安装旧插件；每次发布先验公开归档再更新索引，并同步官网。
+业务数据写入 host.paths.data，更新代码保留数据。所有静态文案包含 en/zh-CN，用户内容保持原文。关闭应用停止后台，最小化继续运行。
+
+日常构建使用公开 npm 精确版本。联调未发布 SDK 时可在 Fn 构建 `bun run npm:pack` 后，运行 `bun scripts/vendor-sdk.ts <artifact-directory>`，再冻结安装并重新检查、测试和打包。归档脱离 workspace 也必须可消费。版本号不是内容摘要，开发归档不能宣称为公共 npm 的同版本包。
+
+开发：在应用目录执行 `fn plugin dev . --browser`；应用使用真实宿主，源码变化中断当前任务并重启开发实例。小组件预览使用 `fn plugin widget widgets/summary.json --preview`。
+
+三个官方应用的小组件固定声明 `size: "1x1"`，行情示例为 `size: "3x1"`。size 表示列数 x 行数，每个维度为 1–4，由插件决定；卡片按固定网格靠左排列，「整理桌面」支持排序和移除。预览器按照 Manifest 的固定尺寸渲染。
+
+## 正式发布
+
+三个应用统一 0.2.0。`bun scripts/release.ts 0.2.0` 验证归档身份并生成摘要索引。`apps-v0.2.0` 标签通过 release.yml 构建、测试、打包、创建 GitHub Release，再下载核对归档后部署 Pages 索引。手动工作流只生成候选，不发布。安装包、市场、宿主和官网依次验收，手机正式版本单独交付。

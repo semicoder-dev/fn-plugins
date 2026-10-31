@@ -1,0 +1,19 @@
+{
+  "app.name": "Translate",
+  "app.description": "Translate with your ChatGPT account",
+  "empty": "Open the application to get started",
+  "auto": "Detect language",
+  "target": "Target language",
+  "english": "English",
+  "chinese": "Simplified Chinese",
+  "translating": "Translating…",
+  "translate": "Translate",
+  "cancel": "Stop",
+  "cancelled": "Stopped; this translation was not saved",
+  "source": "Source text",
+  "placeholder": "Enter text to translate…",
+  "result": "Your translation appears here",
+  "copy": "Copy",
+  "copied": "Copied",
+  "history": "Recent translations"
+}

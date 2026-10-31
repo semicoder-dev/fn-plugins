@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "body": {
+    "type": "text",
+    "text": {
+      "key": "empty"
+    }
+  }
+}

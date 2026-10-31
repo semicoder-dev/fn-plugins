@@ -1,5 +1,10 @@
 import { expect, test } from "bun:test";
-import { edgeVelocity, moveCommand, placeItem, type DragLayout } from "../src/drag-layout.ts";
+import {
+  edgeVelocity,
+  moveCommand,
+  placeItem,
+  type DragLayout,
+} from "../src/drag-layout.ts";
 
 const original: DragLayout = {
   lists: ["todo", "doing", "done"],
@@ -11,7 +16,11 @@ test("card previews can cross several columns and return without changing the sa
   const inEmpty = placeItem(original, card, "done", null);
   const inDoing = placeItem(inEmpty, card, "doing", "d");
   expect(inEmpty.cards.done).toEqual(["a"]);
-  expect(inDoing.cards).toEqual({ todo: ["b", "c"], doing: ["a", "d"], done: [] });
+  expect(inDoing.cards).toEqual({
+    todo: ["b", "c"],
+    doing: ["a", "d"],
+    done: [],
+  });
   expect(moveCommand(original, inDoing, card)).toEqual({
     type: "card.move",
     id: "a",
@@ -53,7 +62,9 @@ test("list previews retain card membership and detect a no-op on returning to th
     id: "todo",
     beforeId: null,
   });
-  expect(moveCommand(original, placeItem(last, list, "", "doing"), list)).toBeNull();
+  expect(
+    moveCommand(original, placeItem(last, list, "", "doing"), list),
+  ).toBeNull();
 });
 
 test("stale targets and the dragged item itself never remove or duplicate a card", () => {

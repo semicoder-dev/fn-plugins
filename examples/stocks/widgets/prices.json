@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "body": {
+    "type": "column",
+    "children": [
+      {
+        "type": "text",
+        "text": {
+          "key": "demo"
+        }
+      },
+      {
+        "type": "metric",
+        "label": {
+          "key": "price"
+        },
+        "value": "—"
+      }
+    ]
+  }
+}

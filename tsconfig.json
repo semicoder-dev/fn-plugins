@@ -11,5 +11,5 @@
     "types": ["bun"],
     "lib": ["ESNext", "DOM"]
   },
-  "include": ["plugins/*/src", "plugins/*/tests", "scripts"]
+  "include": ["plugins/*/src", "plugins/*/tests", "scripts", "examples/*/src"]
 }

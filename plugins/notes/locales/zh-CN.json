@@ -1,0 +1,21 @@
+{
+  "app.name": "笔记",
+  "app.description": "记录想法，保存在本机",
+  "empty": "打开应用，开始使用",
+  "count": "篇笔记",
+  "untitled": "无标题",
+  "new": "新建笔记",
+  "search": "搜索笔记…",
+  "emptyNote": "空笔记",
+  "unsaved": "尚未保存",
+  "saved": "已保存到本机",
+  "saving": "保存中…",
+  "save": "保存",
+  "delete": "删除",
+  "deleteConfirm": "删除这篇笔记？",
+  "title": "标题",
+  "body": "写下你的想法…",
+  "welcome": "记录每一个想法",
+  "discard": "放弃尚未保存的修改？",
+  "conflict": "内容已在其他窗口修改，请重新打开笔记后编辑"
+}

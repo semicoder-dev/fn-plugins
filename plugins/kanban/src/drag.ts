@@ -19,7 +19,8 @@ import styles from "./style.module.css";
 
 const cx = (...names: string[]) => classes(styles, ...names);
 const easing = "cubic-bezier(0.2, 0.8, 0.2, 1)";
-const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const reducedMotion = () =>
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const itemSelector = (item: DragItem) => `[data-${item.kind}-id="${item.id}"]`;
 const contains = (rect: DOMRect, x: number, y: number) =>
   x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
@@ -61,17 +62,25 @@ export function useBoardDrag(options: Options) {
   const animations = useRef(new Map<HTMLElement, Animation>());
   const previousRects = useRef(new Map<string, DOMRect>());
   const ignoreClickUntil = useRef(0);
-  const [preview, setPreview] = useState<{ item: DragItem; layout: DragLayout } | null>(null);
+  const [preview, setPreview] = useState<{
+    item: DragItem;
+    layout: DragLayout;
+  } | null>(null);
   const [announcement, setAnnouncement] = useState("");
 
   function elements() {
     return Array.from(
-      root.current?.querySelectorAll<HTMLElement>("[data-list-id], [data-card-id]") ?? [],
+      root.current?.querySelectorAll<HTMLElement>(
+        "[data-list-id], [data-card-id]",
+      ) ?? [],
     );
   }
   function snapshotRects() {
     previousRects.current = new Map(
-      elements().map((el) => [el.dataset.cardId ?? el.dataset.listId!, el.getBoundingClientRect()]),
+      elements().map((el) => [
+        el.dataset.cardId ?? el.dataset.listId!,
+        el.getBoundingClientRect(),
+      ]),
     );
   }
   function showLayout(s: Session, layout: DragLayout) {
@@ -84,7 +93,12 @@ export function useBoardDrag(options: Options) {
     const rect = el.getBoundingClientRect();
     if (!animations.current.has(el)) return rect;
     const matrix = new DOMMatrixReadOnly(getComputedStyle(el).transform);
-    return new DOMRect(rect.x - matrix.m41, rect.y - matrix.m42, rect.width, rect.height);
+    return new DOMRect(
+      rect.x - matrix.m41,
+      rect.y - matrix.m42,
+      rect.width,
+      rect.height,
+    );
   }
   useLayoutEffect(() => {
     const before = previousRects.current;
@@ -97,12 +111,18 @@ export function useBoardDrag(options: Options) {
         const id = el.dataset.cardId ?? el.dataset.listId!;
         const old = before.get(id);
         // Children of a moving list travel with their parent, never twice.
-        if (!old || id === preview?.item.id || (preview?.item.kind === "list" && el.dataset.cardId))
+        if (
+          !old ||
+          id === preview?.item.id ||
+          (preview?.item.kind === "list" && el.dataset.cardId)
+        )
           continue;
         const rect = el.getBoundingClientRect();
         let dx = old.left - rect.left,
           dy = old.top - rect.top;
-        const parent = el.dataset.cardId ? el.closest<HTMLElement>("[data-list-id]") : null;
+        const parent = el.dataset.cardId
+          ? el.closest<HTMLElement>("[data-list-id]")
+          : null;
         const oldParent = parent && before.get(parent.dataset.listId!);
         if (parent && oldParent) {
           const parentRect = layoutRect(parent);
@@ -111,13 +131,17 @@ export function useBoardDrag(options: Options) {
         }
         if (Math.abs(dx) < 1 && Math.abs(dy) < 1) continue;
         const animation = el.animate(
-          [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "translate(0, 0)" }],
+          [
+            { transform: `translate(${dx}px, ${dy}px)` },
+            { transform: "translate(0, 0)" },
+          ],
           { duration: 200, easing },
         );
         animations.current.set(el, animation);
         void animation.finished.then(
           () => {
-            if (animations.current.get(el) === animation) animations.current.delete(el);
+            if (animations.current.get(el) === animation)
+              animations.current.delete(el);
           },
           () => {},
         );
@@ -152,9 +176,13 @@ export function useBoardDrag(options: Options) {
     if (!commit) showLayout(s, s.original);
     const command = commit ? moveCommand(s.original, s.layout, s.item) : null;
     // Wait for the final placeholder position (including a cancellation rollback) to render.
-    await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+    await new Promise<void>((resolve) =>
+      requestAnimationFrame(() => resolve()),
+    );
     if (session.current !== s) return;
-    const target = root.current?.querySelector<HTMLElement>(itemSelector(s.item));
+    const target = root.current?.querySelector<HTMLElement>(
+      itemSelector(s.item),
+    );
     if (target && s.overlay) {
       const rect = layoutRect(target);
       const animation = s.overlay.animate(
@@ -175,7 +203,9 @@ export function useBoardDrag(options: Options) {
       await animation.finished.catch(() => {});
     }
     if (session.current !== s) return;
-    const saved = command ? await current.current.move(command, s.revision) : true;
+    const saved = command
+      ? await current.current.move(command, s.revision)
+      : true;
     if (session.current !== s) return;
     reset(s);
     setAnnouncement(
@@ -191,7 +221,8 @@ export function useBoardDrag(options: Options) {
 
   function targetList(s: Session) {
     const nodes = Array.from(
-      root.current?.querySelectorAll<HTMLElement>(":scope > [data-list-id]") ?? [],
+      root.current?.querySelectorAll<HTMLElement>(":scope > [data-list-id]") ??
+        [],
     );
     return nodes.reduce<HTMLElement | null>((best, node) => {
       const rect = layoutRect(node);
@@ -217,24 +248,34 @@ export function useBoardDrag(options: Options) {
         board.querySelectorAll<HTMLElement>(":scope > [data-list-id]"),
       ).find((node) => {
         const rect = layoutRect(node);
-        return node.dataset.listId !== s.item.id && s.x < rect.left + rect.width / 2;
+        return (
+          node.dataset.listId !== s.item.id && s.x < rect.left + rect.width / 2
+        );
       });
       next = placeItem(s.layout, s.item, "", before?.dataset.listId ?? null);
     } else {
       const list = targetList(s);
       if (!list) return;
-      const before = Array.from(list.querySelectorAll<HTMLElement>("[data-card-id]")).find(
-        (node) => {
-          const rect = layoutRect(node);
-          return node.dataset.cardId !== s.item.id && s.y < rect.top + rect.height / 2;
-        },
+      const before = Array.from(
+        list.querySelectorAll<HTMLElement>("[data-card-id]"),
+      ).find((node) => {
+        const rect = layoutRect(node);
+        return (
+          node.dataset.cardId !== s.item.id && s.y < rect.top + rect.height / 2
+        );
+      });
+      next = placeItem(
+        s.layout,
+        s.item,
+        list.dataset.listId!,
+        before?.dataset.cardId ?? null,
       );
-      next = placeItem(s.layout, s.item, list.dataset.listId!, before?.dataset.cardId ?? null);
     }
     if (next !== s.layout) showLayout(s, next);
   }
   function frame(s: Session, time: number) {
-    if (session.current !== s || s.phase !== "dragging" || !root.current) return;
+    if (session.current !== s || s.phase !== "dragging" || !root.current)
+      return;
     const board = root.current;
     const rect = board.getBoundingClientRect();
     const elapsed = Math.min(32, time - s.lastTime) / 1000;
@@ -242,7 +283,8 @@ export function useBoardDrag(options: Options) {
     if (contains(rect, s.x, s.y)) {
       board.scrollLeft += edgeVelocity(s.x, rect.left, rect.right) * elapsed;
       if (s.item.kind === "card") {
-        const cards = targetList(s)?.querySelector<HTMLElement>("[data-card-area]");
+        const cards =
+          targetList(s)?.querySelector<HTMLElement>("[data-card-area]");
         if (cards) {
           const bounds = cards.getBoundingClientRect();
           cards.scrollTop +=
@@ -271,8 +313,17 @@ export function useBoardDrag(options: Options) {
     s.offsetY = s.startY - rect.top;
     const overlay = source.cloneNode(true) as HTMLElement;
     // The inert visual clone must never become a second accessible card or a hit-test target.
-    for (const el of [overlay, ...Array.from(overlay.querySelectorAll<HTMLElement>("*"))]) {
-      for (const attr of ["id", "data-card-id", "data-list-id", "data-card-area", "aria-label"])
+    for (const el of [
+      overlay,
+      ...Array.from(overlay.querySelectorAll<HTMLElement>("*")),
+    ]) {
+      for (const attr of [
+        "id",
+        "data-card-id",
+        "data-list-id",
+        "data-card-area",
+        "aria-label",
+      ])
         el.removeAttribute(attr);
     }
     overlay.inert = true;
@@ -287,17 +338,23 @@ export function useBoardDrag(options: Options) {
     });
     board.parentElement!.append(overlay);
     // cloneNode does not preserve the internal scroll position of long lists.
-    source.querySelectorAll<HTMLElement>("[data-card-area]").forEach((el, index) => {
-      const clone = overlay.querySelectorAll<HTMLElement>(`.${cx("kb-cards")}`)[index];
-      if (clone) clone.scrollTop = el.scrollTop;
-    });
+    source
+      .querySelectorAll<HTMLElement>("[data-card-area]")
+      .forEach((el, index) => {
+        const clone = overlay.querySelectorAll<HTMLElement>(
+          `.${cx("kb-cards")}`,
+        )[index];
+        if (clone) clone.scrollTop = el.scrollTop;
+      });
     s.overlay = overlay;
     s.phase = "dragging";
     s.lastTime = performance.now();
     board.setPointerCapture(s.pointerId);
     window.getSelection()?.removeAllRanges();
     showLayout(s, s.layout);
-    setAnnouncement(`正在拖动${s.item.kind === "card" ? "卡片" : "列表"}，按 Esc 取消`);
+    setAnnouncement(
+      `正在拖动${s.item.kind === "card" ? "卡片" : "列表"}，按 Esc 取消`,
+    );
     s.frame = requestAnimationFrame((time) => frame(s, time));
   }
 
@@ -353,7 +410,11 @@ export function useBoardDrag(options: Options) {
       if (e.pointerId !== s.pointerId || s.phase === "settling") return;
       s.x = e.clientX;
       s.y = e.clientY;
-      if (s.phase === "pending" && Math.hypot(s.x - s.startX, s.y - s.startY) >= 6) activate(s);
+      if (
+        s.phase === "pending" &&
+        Math.hypot(s.x - s.startX, s.y - s.startY) >= 6
+      )
+        activate(s);
       if (s.phase === "dragging") e.preventDefault();
     };
     const release = (e: MouseEvent) => {
@@ -406,7 +467,10 @@ export function useBoardDrag(options: Options) {
       reset(s);
       return;
     }
-    if (s.phase !== "settling" && (options.disabled || s.revision !== options.revision))
+    if (
+      s.phase !== "settling" &&
+      (options.disabled || s.revision !== options.revision)
+    )
       void finish(s, false);
   }, [options.boardId, options.revision, options.disabled]);
   useEffect(

@@ -1,0 +1,107 @@
+.page {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  height: 100vh;
+}
+.page aside {
+  background: var(--fn-soft);
+  border-right: 1px solid var(--fn-border);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.page header {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 18px;
+  min-height: 36px;
+}
+.page h1 {
+  font-size: 17px;
+  margin: 0;
+  flex: 1;
+}
+.page nav {
+  overflow: auto;
+  display: grid;
+  gap: 7px;
+  margin-top: 20px;
+}
+.page nav button {
+  text-align: left;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  padding: 12px;
+  color: var(--fn-text);
+  min-width: 0;
+}
+.page nav button[aria-current="true"] {
+  background: var(--fn-surface);
+  border-color: var(--fn-border);
+}
+.page nav b,
+.page nav span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.page nav span {
+  font-size: 12px;
+  color: var(--fn-secondary);
+  margin: 6px 0;
+}
+.page time {
+  font-size: 11px;
+  color: var(--fn-muted);
+}
+.editor {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+.editor header {
+  margin: 0;
+}
+.editor header > span {
+  flex: 1;
+  font-size: 12px;
+  color: var(--fn-muted);
+}
+.editor > textarea {
+  flex: 1;
+  resize: none;
+  line-height: 1.8;
+}
+.editor > div:has(> input) {
+  font-size: 21px;
+}
+.empty {
+  margin: auto;
+  text-align: center;
+}
+.empty h2 {
+  font-size: 18px;
+}
+@media (max-width: 650px) {
+  .page {
+    grid-template-columns: 180px 1fr;
+  }
+  .page aside {
+    padding: 12px;
+  }
+  .editor {
+    padding: 14px;
+  }
+  .editor header {
+    flex-wrap: wrap;
+  }
+  .editor header > span {
+    flex-basis: 100%;
+  }
+}

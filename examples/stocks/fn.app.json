@@ -1,0 +1,32 @@
+{
+  "manifestVersion": 1,
+  "id": "fn-stock-example",
+  "version": "0.1.0",
+  "hostApi": 1,
+  "name": {
+    "key": "app.name"
+  },
+  "description": {
+    "key": "app.description"
+  },
+  "entries": {
+    "backend": "src/backend.ts"
+  },
+  "locales": {
+    "default": "zh-CN",
+    "messages": {
+      "en": "locales/en.json",
+      "zh-CN": "locales/zh-CN.json"
+    }
+  },
+  "uses": ["widgets.publish"],
+  "contributes": {
+    "widgets": [
+      {
+        "id": "prices",
+        "size": "3x1",
+        "initial": "widgets/prices.json"
+      }
+    ]
+  }
+}

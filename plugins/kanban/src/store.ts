@@ -27,10 +27,15 @@ export class KanbanStore {
     mkdirSync(dirname(filename), { recursive: true, mode: 0o700 });
     this.db = new Database(filename, { create: true, strict: true });
     try {
-      this.db.exec("PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; PRAGMA busy_timeout=3000;");
-      const version = this.db.query("PRAGMA user_version").get() as { user_version: number };
-      if (version.user_version > 2) throw new Error("看板数据由更新版本创建，请升级插件");
-      if (version.user_version === 1) throw new Error("旧看板数据格式不受支持，不进行兼容或迁移");
+      this.db.exec(
+        "PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; PRAGMA busy_timeout=3000;",
+      );
+      const version = this.db.query("PRAGMA user_version").get() as {
+        user_version: number;
+      };
+      if (version.user_version > 2)
+        throw new Error("看板数据由更新版本创建，请升级插件");
+      if (version.user_version === 1) throw new Error("数据格式无法读取");
       this.db
         .transaction(() => {
           this.db.exec(
@@ -46,7 +51,9 @@ export class KanbanStore {
               labelNamesVisible: true,
             }),
           );
-          const row = this.db.query("SELECT body FROM document WHERE id=1").get() as {
+          const row = this.db
+            .query("SELECT body FROM document WHERE id=1")
+            .get() as {
             body: string;
           };
           stateSchema.parse(JSON.parse(row.body));
@@ -63,10 +70,15 @@ export class KanbanStore {
     this.db.close();
   }
   read(): State {
-    const row = this.db.query("SELECT body FROM document WHERE id=1").get() as { body: string };
+    const row = this.db.query("SELECT body FROM document WHERE id=1").get() as {
+      body: string;
+    };
     return stateSchema.parse(JSON.parse(row.body));
   }
-  mutate(input: Mutation): { state: State; createdId?: string } {
+  mutate(
+    input: Mutation,
+    locale = "zh-CN",
+  ): { state: State; createdId?: string } {
     const request = mutation.parse(input);
     return this.db
       .transaction(() => {
@@ -75,11 +87,18 @@ export class KanbanStore {
           .digest("hex");
         const receipt = this.db
           .query("SELECT fingerprint, created_id FROM receipts WHERE id=?")
-          .get(request.requestId) as { fingerprint: string; created_id: string | null } | null;
+          .get(request.requestId) as {
+          fingerprint: string;
+          created_id: string | null;
+        } | null;
         const state = this.read();
         if (receipt) {
-          if (receipt.fingerprint !== fingerprint) throw new Error("重复请求的内容不一致");
-          return { state, ...(receipt.created_id ? { createdId: receipt.created_id } : {}) };
+          if (receipt.fingerprint !== fingerprint)
+            throw new Error("重复请求的内容不一致");
+          return {
+            state,
+            ...(receipt.created_id ? { createdId: receipt.created_id } : {}),
+          };
         }
         if (request.revision !== state.revision)
           throw new Error("内容已在其他窗口更新，请刷新后再保存");
@@ -108,9 +127,15 @@ export class KanbanStore {
         switch (c.type) {
           case "board.create": {
             createdId = crypto.randomUUID();
-            state.boards.push({ id: createdId, title: c.title, archived: false });
+            state.boards.push({
+              id: createdId,
+              title: c.title,
+              archived: false,
+            });
             state.labels.push(...defaultLabels(createdId));
-            for (const title of ["待办", "进行中", "已完成"])
+            for (const title of locale === "en"
+              ? ["To do", "In progress", "Done"]
+              : ["待办", "进行中", "已完成"])
               state.lists.push({
                 id: crypto.randomUUID(),
                 boardId: createdId,
@@ -127,10 +152,17 @@ export class KanbanStore {
             break;
           case "label.create":
             activeBoard(c.boardId);
-            if (state.labels.filter((label) => label.boardId === c.boardId).length >= 100)
+            if (
+              state.labels.filter((label) => label.boardId === c.boardId)
+                .length >= 100
+            )
               throw new Error("每个看板最多 100 个标签");
             createdId = crypto.randomUUID();
-            state.labels.push({ id: createdId, boardId: c.boardId, ...c.details });
+            state.labels.push({
+              id: createdId,
+              boardId: c.boardId,
+              ...c.details,
+            });
             break;
           case "label.edit": {
             const label = required(state.labels, c.id);
@@ -244,9 +276,17 @@ function required<T extends { id: string }>(items: T[], id: string): T {
   if (!item) throw new Error("内容已不存在，请刷新看板");
   return item;
 }
-function move<T extends { id: string }>(items: T[], id: string, beforeId: string | null) {
+function move<T extends { id: string }>(
+  items: T[],
+  id: string,
+  beforeId: string | null,
+) {
   if (id === beforeId) return;
   const item = required(items, id);
   items.splice(items.indexOf(item), 1);
-  items.splice(beforeId ? items.indexOf(required(items, beforeId)) : items.length, 0, item);
+  items.splice(
+    beforeId ? items.indexOf(required(items, beforeId)) : items.length,
+    0,
+    item,
+  );
 }

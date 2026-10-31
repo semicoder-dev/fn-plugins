@@ -1,39 +1,44 @@
-import { parseArgs } from "node:util";
-import { archivePath, candidateIndex } from "./market.ts";
-const { values } = parseArgs({
-  args: process.argv.slice(2),
-  options: {
-    cert: { type: "string" },
-    key: { type: "string" },
-    port: { type: "string", default: "9443" },
-  },
-});
-if (!values.cert || !values.key)
-  throw new Error(
-    "Usage: bun run market:local --cert <localhost certificate> --key <key> [--port 9443]",
-  );
+import { resolve } from "node:path";
+const port = Number(process.argv[2] ?? 4321),
+  origin = `http://127.0.0.1:${port}`;
+const applications: {
+    id: string;
+    version: string;
+    name: string;
+    description: string;
+    url: string;
+    sha256: string;
+  }[] = [],
+  files = new Map<string, string>();
+for (const name of ["translate", "notes", "kanban"]) {
+  const manifest = await Bun.file(`plugins/${name}/fn.app.json`).json();
+  const filename = `${manifest.id}-${manifest.version}.fn.tgz`,
+    path = resolve(`plugins/${name}`, filename);
+  const bytes = await Bun.file(path).bytes();
+  const messages = await Bun.file(
+    resolve(`plugins/${name}`, manifest.locales.messages["zh-CN"]),
+  ).json();
+  applications.push({
+    id: manifest.id,
+    version: manifest.version,
+    name: messages[manifest.name.key] ?? manifest.name,
+    description: messages[manifest.description?.key] ?? "",
+    url: origin + "/" + filename,
+    sha256: new Bun.CryptoHasher("sha256").update(bytes).digest("hex"),
+  });
+  files.set("/" + filename, path);
+}
 const server = Bun.serve({
   hostname: "127.0.0.1",
-  port: Number(values.port),
-  tls: { cert: Bun.file(values.cert), key: Bun.file(values.key) },
-  async fetch(request): Promise<Response> {
+  port,
+  fetch(request) {
     const path = new URL(request.url).pathname;
-    if (path === "/marketplace.json")
-      return Response.json(await candidateIndex(`https://127.0.0.1:${server.port}/`), {
-        headers: { "cache-control": "no-store" },
-      });
-    if (path === "/kanban.tgz")
-      return new Response(Bun.file(archivePath), {
-        headers: { "content-type": "application/gzip", "cache-control": "no-store" },
-      });
-    return new Response("Not found", { status: 404 });
+    if (path === "/applications.json")
+      return Response.json({ schema: 1, applications });
+    const file = files.get(path);
+    return file
+      ? new Response(Bun.file(file))
+      : new Response("Not Found", { status: 404 });
   },
 });
-const url = `https://127.0.0.1:${server.port}/marketplace.json`;
-await Bun.write(new URL("../artifacts/local-market-url.txt", import.meta.url), url + "\n");
-console.log(`Local candidate market: ${url}`);
-for (const signal of ["SIGINT", "SIGTERM"] as const)
-  process.on(signal, () => {
-    server.stop(true);
-    process.exit(0);
-  });
+console.log(`Local development market: ${server.url}applications.json`);
