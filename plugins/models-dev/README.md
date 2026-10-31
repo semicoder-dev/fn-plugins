@@ -1,6 +1,8 @@
 # 模型目录 · models.dev
 
-`@semicoder/fn-models-dev` 0.1.0，适用于 fn 0.6 / SDK 0.5；不适用于 fn 0.5.2。无需模型账号或 API Key。
+`@semicoder/fn-models-dev` 0.1.1，适用于 fn 0.6 / SDK 0.5；不适用于 fn 0.5.2。无需模型账号或 API Key。
+
+0.1.1 统一价格详情弹窗的段落和价格分组间距，保留现有目录缓存、API 与价格展示规则。
 
 通过官方 `https://models.dev/catalog.json?type=all` 获取模型信息，以 canonical model 为列表单位；供应方案按上游规则依次匹配有效的 `canonical_model_id`、完整模型 ID、供应商 ID/模型 ID，不靠名称猜测。覆盖 API 返回的全部类型，包括对话、图像、视频、嵌入等。
 
@@ -13,7 +15,7 @@
 
 ## 构建与安装
 
-在本仓库根执行 `bun run check`、`bun run test`、`bun run pack`。输出 `artifacts/semicoder-fn-models-dev-0.1.0.tgz`；在开发宿主“应用中心 → 从地址安装”填入归档的本机绝对路径，等待新组合激活。重新构建后须通过插件管理更新，不能原地覆盖安装目录。正式安装可从 fn 0.6 官方应用中心选择「模型目录」。
+在本仓库根执行 `bun run check`、`bun run test`、`bun run pack`。输出 `artifacts/semicoder-fn-models-dev-0.1.1.tgz`；在开发宿主“应用中心 → 从地址安装”填入归档的本机绝对路径，等待新组合激活。重新构建后须通过插件管理更新，不能原地覆盖安装目录。正式安装可从 fn 0.6 官方应用中心选择「模型目录」。
 
 ## 插件 API
 

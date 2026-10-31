@@ -1,8 +1,8 @@
 # fn 官方插件市场
 
-新增 [模型目录](plugins/models-dev/README.md)（`@semicoder/fn-models-dev` 0.1.0）：通过 models.dev 官方 API 浏览模型规格、筛选排序和供应商价格，缓存支持离线查看。
+新增 [模型目录](plugins/models-dev/README.md)（`@semicoder/fn-models-dev` 0.1.1）：通过 models.dev 官方 API 浏览模型规格、筛选排序和供应商价格，缓存支持离线查看。
 
-首个正式应用是 [看板](plugins/kanban/README.md)：`fn-kanban` / `@semicoder/fn-kanban`，版本 0.1.0。它是完整的双端 Cordis 插件，使用自己的 SQLite 保存本地看板，通过原版 Slots 提供页面。无需模型或云账号。
+首个正式应用是 [看板](plugins/kanban/README.md)：`fn-kanban` / `@semicoder/fn-kanban`，版本 0.1.1。它是完整的双端 Cordis 插件，使用自己的 SQLite 保存本地看板，通过原版 Slots 提供页面。无需模型或云账号。
 
 适用宿主为 **fn 0.6.0 / SDK 0.5.0**，不兼容 fn 0.5.2 / SDK 0.4.0 的旧契约。SDK 精确消费公开 npm 0.5.0；其他尚未独立发布的宿主契约由 `vendor/manifest.json` 固定归档和锁文件提供，安装/构建不读取相邻 fn 源码。固定归档不能用同版本 npm 包替代；FIA 类型归档不含原生 Host/Bun，不能用来发行应用。
 
@@ -17,13 +17,13 @@ bun install --frozen-lockfile --ignore-scripts
 bun run check
 bun run test
 bun run pack
-# 输出 artifacts/semicoder-fn-kanban-0.1.0.tgz
-# 以及 artifacts/semicoder-fn-models-dev-0.1.0.tgz
+# 输出 artifacts/semicoder-fn-kanban-0.1.1.tgz
+# 以及 artifacts/semicoder-fn-models-dev-0.1.1.tgz
 # 在fn 0.6 宿主“应用中心 → 从地址安装”中填写归档绝对路径。
 ```
 
 本地市场验收使用 `bun run market:local --cert <localhost-cert.pem> --key <key.pem>`，将输出的 HTTPS 地址添加到隔离开发宿主。证书必须被该验收进程信任；不要关闭 TLS 验证或提交私钥。源文件、构建包和安装目录分开，重新打包后通过市场更新或地址更新加载。
 
-日常 fn Dev 的源码监听只更新宿主及默认组合，不自动替换独立安装的看板。开发归档即使仍标为 0.1.0，内容也可能不同；重新 `pack` 后，在“已安装”中更新原记录，等待后台重启。交付验收应核对已安装 `dist/client.js` 与本轮归档的 SHA-256，并验证数据保留；隔离宿主安装通过不代表日常 Dev 已使用新包。
+日常 fn Dev 的源码监听只更新宿主及默认组合，不自动替换独立安装的看板。开发归档即使仍标为 0.1.1，内容也可能不同；重新 `pack` 后，在“已安装”中更新原记录，等待更新完成；fn 0.6.1 通常局部生效，无法安全热更新时仍会重启后台。交付验收应核对已安装 `dist/client.js` 与本轮归档的 SHA-256，并验证数据保留；隔离宿主安装通过不代表日常 Dev 已使用新包。
 
 历史 `marketplace-cordis.json` 原样保留给 fn 0.5.x，历史标签和附件不改动。新版不安装旧插件；每次发布先验公开归档再更新索引，并同步官网。

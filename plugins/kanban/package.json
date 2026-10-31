@@ -1,6 +1,6 @@
 {
   "name": "@semicoder/fn-kanban",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "本地看板，用列表和卡片整理工作，支持拖动、标签、截止日期与检查清单。",
   "repository": {
     "type": "git",

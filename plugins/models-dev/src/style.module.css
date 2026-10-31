@@ -158,9 +158,22 @@
   overflow: auto;
 }
 .offer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   max-width: 100%;
   font-size: 13px;
   overflow-wrap: anywhere;
+}
+.offer p,
+.offer h3,
+.offer dl {
+  margin: 0;
+}
+.offer section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 .sr {
   position: absolute;

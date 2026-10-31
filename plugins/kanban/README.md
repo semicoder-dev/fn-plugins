@@ -1,6 +1,8 @@
 # 看板
 
-`fn-kanban` · `@semicoder/fn-kanban` · 0.1.0，适用于 fn 0.6 / SDK 0.5。
+`fn-kanban` · `@semicoder/fn-kanban` · 0.1.1，适用于 fn 0.6 / SDK 0.5。
+
+0.1.1 收紧新建、重命名、筛选、卡片详情、标签和归档弹窗的重复间距；数据格式及操作方式不变，直接更新即可保留现有内容。
 
 用列表整理进度，用卡片记录任务。交互参考 [Trello 的卡片与列表移动](https://support.atlassian.com/trello/docs/moving-cards-or-lists/)，内容保存在本机，无需账号或模型服务。
 
@@ -35,4 +37,4 @@
 - 插件 ID 是产品标识，运行包 ID 由市场生成，后端/客户端实例 ID 由 profile 管理。当前包提供单个本机看板服务，不要同时启用两份后端实例注册相同 API 命名空间。
 - `fn.iconSvg` 声明固定输出 `dist/icon.svg`，构建脚本复制包内 `src/icon.svg`；市场索引使用 SVG 内容。共享核心和 React 是 peer dependencies，打包不携带它们。
 
-验收记录见 [acceptance.md](acceptance.md)。生产索引待发布归档验证后再登记，本轮没有上架或发布。
+验收记录见 [acceptance.md](acceptance.md)。正式归档经公开下载验证后登记生产索引；历史版本的标签和附件保留。

@@ -23,9 +23,11 @@ for (const entry of published) {
     throw new Error("Unknown or duplicate market package");
   seen.add(entry.packageName);
   const slug = entry.packageName.replace("@semicoder/fn-", "");
-  const expectedURL = `https://github.com/semicoder-dev/fn-plugins/releases/download/${slug}-v${source.version}/semicoder-fn-${slug}-${source.version}.tgz`;
+  // Source may be ahead while the market still points at its verified public release.
+  const expectedURL = `https://github.com/semicoder-dev/fn-plugins/releases/download/${slug}-v${entry.version}/semicoder-fn-${slug}-${entry.version}.tgz`;
   if (
-    entry.version !== source.version ||
+    !/^\d+\.\d+\.\d+$/.test(entry.version) ||
+    !Bun.semver.satisfies(entry.version, `<=${source.version}`) ||
     entry.name !== source.fn.name ||
     entry.description !== source.description ||
     entry.url !== expectedURL ||

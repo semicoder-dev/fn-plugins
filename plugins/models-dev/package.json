@@ -1,6 +1,6 @@
 {
   "name": "@semicoder/fn-models-dev",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "通过 models.dev API 浏览模型规格、能力与供应商价格。",
   "repository": {
     "type": "git",

@@ -493,48 +493,50 @@ function Kanban({ remote, navigation }: { remote: Remote; navigation: Navigation
           contentClassName={cx("kb-dialog-content")}
           onClose={() => setDialog(null)}
         >
-          <label className={cx("kb-field")}>
-            搜索卡片
-            <Input
-              data-modal-autofocus
-              type="search"
-              aria-label="筛选中搜索卡片"
-              placeholder="搜索名称、描述、标签…"
-              icon={<IconSearchOutlineRegular />}
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-            />
-          </label>
-          <div className={cx("kb-field")}>
-            <span>标签</span>
-            <Select
-              value={label}
-              onValueChange={setLabel}
-              label="筛选标签"
-              options={[
-                { value: "", label: "所有标签" },
-                ...boardLabels.map((item) => ({
-                  value: item.id,
-                  label: <LabelBadge label={item} fallback />,
-                })),
-              ]}
-            />
-          </div>
-          <p className={cx("kb-muted")}>筛选即时生效；清除筛选后可拖动排序。</p>
-          <div className={cx("kb-modal-footer")}>
-            <Button
-              type="button"
-              disabled={!filtered}
-              onClick={() => {
-                setQuery("");
-                setLabel("");
-              }}
-            >
-              清除筛选
-            </Button>
-            <Button type="button" variant="primary" onClick={() => setDialog(null)}>
-              完成
-            </Button>
+          <div className={cx("kb-dialog-stack")}>
+            <label className={cx("kb-field")}>
+              搜索卡片
+              <Input
+                data-modal-autofocus
+                type="search"
+                aria-label="筛选中搜索卡片"
+                placeholder="搜索名称、描述、标签…"
+                icon={<IconSearchOutlineRegular />}
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+              />
+            </label>
+            <div className={cx("kb-field")}>
+              <span>标签</span>
+              <Select
+                value={label}
+                onValueChange={setLabel}
+                label="筛选标签"
+                options={[
+                  { value: "", label: "所有标签" },
+                  ...boardLabels.map((item) => ({
+                    value: item.id,
+                    label: <LabelBadge label={item} fallback />,
+                  })),
+                ]}
+              />
+            </div>
+            <p className={cx("kb-muted")}>筛选即时生效；清除筛选后可拖动排序。</p>
+            <div className={cx("kb-modal-footer")}>
+              <Button
+                type="button"
+                disabled={!filtered}
+                onClick={() => {
+                  setQuery("");
+                  setLabel("");
+                }}
+              >
+                清除筛选
+              </Button>
+              <Button type="button" variant="primary" onClick={() => setDialog(null)}>
+                完成
+              </Button>
+            </div>
           </div>
         </Modal>
       )}
@@ -602,53 +604,59 @@ function Kanban({ remote, navigation }: { remote: Remote; navigation: Navigation
           title={archiveBoardId ? "归档内容" : "归档看板"}
           onClose={() => setDialog(null)}
         >
-          <p className={cx("kb-muted")}>
-            {archiveBoardId
-              ? "归档内容仍保存在本机。先恢复列表，再恢复其中的卡片。"
-              : "归档的看板仍保存在本机，恢复后会重新出现在首页。"}
-          </p>
-          <div className={cx("kb-archive")}>
-            {archivedBoards.map((item) => (
-              <ArchiveRow
-                key={item.id}
-                title={item.title}
-                kind="看板"
-                disabled={saving}
-                restore={() => void mutate({ type: "board.archive", id: item.id, archived: false })}
-              />
-            ))}
-            {archivedLists.map((item) => (
-              <ArchiveRow
-                key={item.id}
-                title={item.title}
-                kind={`列表 · ${data.boards.find((b) => b.id === item.boardId)?.title}`}
-                disabled={
-                  saving || Boolean(data.boards.find((b) => b.id === item.boardId)?.archived)
-                }
-                restore={() => void mutate({ type: "list.archive", id: item.id, archived: false })}
-              />
-            ))}
-            {archivedCards.map((item) => {
-              const list = data.lists.find((l) => l.id === item.listId)!;
-              return (
+          <div className={cx("kb-dialog-stack")}>
+            <p className={cx("kb-muted")}>
+              {archiveBoardId
+                ? "归档内容仍保存在本机。先恢复列表，再恢复其中的卡片。"
+                : "归档的看板仍保存在本机，恢复后会重新出现在首页。"}
+            </p>
+            <div className={cx("kb-archive")}>
+              {archivedBoards.map((item) => (
                 <ArchiveRow
                   key={item.id}
                   title={item.title}
-                  kind={`卡片 · ${list.title}`}
-                  disabled={
-                    saving ||
-                    list.archived ||
-                    Boolean(data.boards.find((b) => b.id === list.boardId)?.archived)
-                  }
+                  kind="看板"
+                  disabled={saving}
                   restore={() =>
-                    void mutate({ type: "card.archive", id: item.id, archived: false })
+                    void mutate({ type: "board.archive", id: item.id, archived: false })
                   }
                 />
-              );
-            })}
-            {!archivedBoards.length && !archivedLists.length && !archivedCards.length && (
-              <p className={cx("kb-empty-inline")}>还没有归档内容。</p>
-            )}
+              ))}
+              {archivedLists.map((item) => (
+                <ArchiveRow
+                  key={item.id}
+                  title={item.title}
+                  kind={`列表 · ${data.boards.find((b) => b.id === item.boardId)?.title}`}
+                  disabled={
+                    saving || Boolean(data.boards.find((b) => b.id === item.boardId)?.archived)
+                  }
+                  restore={() =>
+                    void mutate({ type: "list.archive", id: item.id, archived: false })
+                  }
+                />
+              ))}
+              {archivedCards.map((item) => {
+                const list = data.lists.find((l) => l.id === item.listId)!;
+                return (
+                  <ArchiveRow
+                    key={item.id}
+                    title={item.title}
+                    kind={`卡片 · ${list.title}`}
+                    disabled={
+                      saving ||
+                      list.archived ||
+                      Boolean(data.boards.find((b) => b.id === list.boardId)?.archived)
+                    }
+                    restore={() =>
+                      void mutate({ type: "card.archive", id: item.id, archived: false })
+                    }
+                  />
+                );
+              })}
+              {!archivedBoards.length && !archivedLists.length && !archivedCards.length && (
+                <p className={cx("kb-empty-inline")}>还没有归档内容。</p>
+              )}
+            </div>
           </div>
         </Modal>
       )}
@@ -882,269 +890,271 @@ function CardDialog({
       title="卡片详情"
       onClose={requestClose}
     >
-      {confirmClose && (
-        <div className={cx("kb-error")} role="alert">
-          卡片有未保存的修改。
-          <Button onClick={() => setConfirmClose(false)} type="button">
-            继续编辑
-          </Button>
-          <Button onClick={close} type="button">
-            放弃修改
-          </Button>
-        </div>
-      )}
-      <form
-        onSubmit={async (e) => {
-          e.preventDefault();
-          if (await save(draft)) close();
-        }}
-      >
-        <p className={cx("kb-muted")}>位于「{list.title}」列表</p>
-        <label className={cx("kb-field")}>
-          卡片名称
-          <Input
-            data-modal-autofocus
-            required
-            maxLength={200}
-            value={draft.title}
-            onChange={(e) => set("title", e.target.value)}
-          />
-        </label>
-        <label className={cx("kb-field")}>
-          描述
-          <Textarea
-            rows={4}
-            maxLength={20000}
-            placeholder="补充背景、链接或要点…"
-            value={draft.description}
-            onChange={(e) => set("description", e.target.value)}
-          />
-        </label>
-        <fieldset className={cx("kb-field")}>
-          <legend>标签</legend>
-          <div className={cx("kb-label-options")}>
-            {draft.labels.map((id) => {
-              const label = labels.find((label) => label.id === id);
-              return label ? (
-                <Button
-                  type="button"
-                  key={id}
-                  className={cx("kb-label-toggle")}
-                  aria-label={`管理标签 ${labelTitle(label)}`}
-                  onClick={() => setLabelsOpen(true)}
-                >
-                  <LabelBadge label={label} fallback />
-                </Button>
-              ) : null;
-            })}
-            <Button
-              type="button"
-              size="sm"
-              aria-label="选择标签"
-              onClick={() => setLabelsOpen(true)}
-            >
-              <IconPlusOutlineRegular />
-              {draft.labels.length ? "标签" : "添加标签"}
+      <div className={cx("kb-dialog-stack")}>
+        {confirmClose && (
+          <div className={cx("kb-error")} role="alert">
+            卡片有未保存的修改。
+            <Button onClick={() => setConfirmClose(false)} type="button">
+              继续编辑
+            </Button>
+            <Button onClick={close} type="button">
+              放弃修改
             </Button>
           </div>
-        </fieldset>
-        <div className={cx("kb-detail-row")}>
+        )}
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+            if (await save(draft)) close();
+          }}
+        >
+          <p className={cx("kb-muted")}>位于「{list.title}」列表</p>
           <label className={cx("kb-field")}>
-            截止日期
+            卡片名称
             <Input
-              className={cx("kb-date")}
-              type="date"
-              value={draft.due ?? ""}
-              onInput={(e) => set("due", e.currentTarget.value || null)}
-              onChange={(e) => set("due", e.target.value || null)}
+              data-modal-autofocus
+              required
+              maxLength={200}
+              value={draft.title}
+              onChange={(e) => set("title", e.target.value)}
             />
           </label>
-          <Checkbox
-            className={cx("kb-checkbox")}
-            checked={draft.done}
-            onChange={(checked) => set("done", checked)}
-            label={"标记为已完成"}
-          />
-        </div>
-        <fieldset className={cx("kb-field")}>
-          <legend>
-            检查清单{" "}
-            <span className={cx("kb-muted")}>
-              {draft.checklist.filter((item) => item.done).length}/{draft.checklist.length}
-            </span>
-          </legend>
-          {draft.checklist.length > 0 && (
-            <progress
-              value={draft.checklist.filter((item) => item.done).length}
-              max={draft.checklist.length}
+          <label className={cx("kb-field")}>
+            描述
+            <Textarea
+              rows={4}
+              maxLength={20000}
+              placeholder="补充背景、链接或要点…"
+              value={draft.description}
+              onChange={(e) => set("description", e.target.value)}
             />
-          )}
-          {draft.checklist.map((item) => (
-            <div className={cx("kb-check-item")} key={item.id}>
-              <Checkbox
-                label={`完成 ${item.text}`}
-                className={cx("kb-check-toggle")}
-                checked={item.done}
-                onChange={(checked) =>
-                  set(
-                    "checklist",
-                    draft.checklist.map((value) =>
-                      value.id === item.id ? { ...value, done: checked } : value,
-                    ),
-                  )
-                }
-              />
+          </label>
+          <fieldset className={cx("kb-field")}>
+            <legend>标签</legend>
+            <div className={cx("kb-label-options")}>
+              {draft.labels.map((id) => {
+                const label = labels.find((label) => label.id === id);
+                return label ? (
+                  <Button
+                    type="button"
+                    key={id}
+                    className={cx("kb-label-toggle")}
+                    aria-label={`管理标签 ${labelTitle(label)}`}
+                    onClick={() => setLabelsOpen(true)}
+                  >
+                    <LabelBadge label={label} fallback />
+                  </Button>
+                ) : null;
+              })}
+              <Button
+                type="button"
+                size="sm"
+                aria-label="选择标签"
+                onClick={() => setLabelsOpen(true)}
+              >
+                <IconPlusOutlineRegular />
+                {draft.labels.length ? "标签" : "添加标签"}
+              </Button>
+            </div>
+          </fieldset>
+          <div className={cx("kb-detail-row")}>
+            <label className={cx("kb-field")}>
+              截止日期
               <Input
-                aria-label="检查项内容"
+                className={cx("kb-date")}
+                type="date"
+                value={draft.due ?? ""}
+                onInput={(e) => set("due", e.currentTarget.value || null)}
+                onChange={(e) => set("due", e.target.value || null)}
+              />
+            </label>
+            <Checkbox
+              className={cx("kb-checkbox")}
+              checked={draft.done}
+              onChange={(checked) => set("done", checked)}
+              label={"标记为已完成"}
+            />
+          </div>
+          <fieldset className={cx("kb-field")}>
+            <legend>
+              检查清单{" "}
+              <span className={cx("kb-muted")}>
+                {draft.checklist.filter((item) => item.done).length}/{draft.checklist.length}
+              </span>
+            </legend>
+            {draft.checklist.length > 0 && (
+              <progress
+                value={draft.checklist.filter((item) => item.done).length}
+                max={draft.checklist.length}
+              />
+            )}
+            {draft.checklist.map((item) => (
+              <div className={cx("kb-check-item")} key={item.id}>
+                <Checkbox
+                  label={`完成 ${item.text}`}
+                  className={cx("kb-check-toggle")}
+                  checked={item.done}
+                  onChange={(checked) =>
+                    set(
+                      "checklist",
+                      draft.checklist.map((value) =>
+                        value.id === item.id ? { ...value, done: checked } : value,
+                      ),
+                    )
+                  }
+                />
+                <Input
+                  aria-label="检查项内容"
+                  maxLength={200}
+                  required
+                  value={item.text}
+                  onChange={(e) =>
+                    set(
+                      "checklist",
+                      draft.checklist.map((value) =>
+                        value.id === item.id ? { ...value, text: e.target.value } : value,
+                      ),
+                    )
+                  }
+                />
+                <Button
+                  type="button"
+                  aria-label={`删除 ${item.text}`}
+                  onClick={() =>
+                    set(
+                      "checklist",
+                      draft.checklist.filter((value) => value.id !== item.id),
+                    )
+                  }
+                >
+                  <IconCloseOutlineRegular />
+                </Button>
+              </div>
+            ))}
+            <div className={cx("kb-check-item")}>
+              <Input
+                aria-label="新检查项"
+                placeholder="添加一项…"
+                value={checkText}
                 maxLength={200}
-                required
-                value={item.text}
-                onChange={(e) =>
-                  set(
-                    "checklist",
-                    draft.checklist.map((value) =>
-                      value.id === item.id ? { ...value, text: e.target.value } : value,
-                    ),
-                  )
-                }
+                onChange={(e) => setCheckText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.nativeEvent.isComposing) {
+                    e.preventDefault();
+                    addCheck();
+                  }
+                }}
               />
               <Button
                 type="button"
-                aria-label={`删除 ${item.text}`}
-                onClick={() =>
-                  set(
-                    "checklist",
-                    draft.checklist.filter((value) => value.id !== item.id),
-                  )
-                }
+                disabled={!checkText.trim() || draft.checklist.length >= 100}
+                onClick={addCheck}
               >
-                <IconCloseOutlineRegular />
+                添加
               </Button>
             </div>
-          ))}
-          <div className={cx("kb-check-item")}>
-            <Input
-              aria-label="新检查项"
-              placeholder="添加一项…"
-              value={checkText}
-              maxLength={200}
-              onChange={(e) => setCheckText(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.nativeEvent.isComposing) {
-                  e.preventDefault();
-                  addCheck();
-                }
-              }}
-            />
-            <Button
-              type="button"
-              disabled={!checkText.trim() || draft.checklist.length >= 100}
-              onClick={addCheck}
-            >
-              添加
+          </fieldset>
+          {error && (
+            <p className={cx("kb-error")} role="alert">
+              {error}（编辑内容已保留；关闭后重新打开卡片可获取最新版本。）
+            </p>
+          )}
+          <footer className={cx("kb-modal-footer")}>
+            <Button type="button" onClick={requestClose}>
+              取消
             </Button>
-          </div>
-        </fieldset>
-        {error && (
-          <p className={cx("kb-error")} role="alert">
-            {error}（编辑内容已保留；关闭后重新打开卡片可获取最新版本。）
-          </p>
-        )}
-        <footer className={cx("kb-modal-footer")}>
-          <Button type="button" onClick={requestClose}>
-            取消
+            <Button
+              className={cx("kb-primary")}
+              disabled={saving || !draft.title.trim()}
+              type="submit"
+              variant="primary"
+            >
+              保存卡片
+            </Button>
+          </footer>
+        </form>
+        <section className={cx("kb-card-tools")}>
+          <Button type="button" aria-expanded={toolsOpen} onClick={() => setToolsOpen(!toolsOpen)}>
+            移动与归档
+            <IconChevronDownOutlineRegular className={cx("kb-disclosure-icon")} />
           </Button>
-          <Button
-            className={cx("kb-primary")}
-            disabled={saving || !draft.title.trim()}
-            type="submit"
-            variant="primary"
-          >
-            保存卡片
-          </Button>
-        </footer>
-      </form>
-      <section className={cx("kb-card-tools")}>
-        <Button type="button" aria-expanded={toolsOpen} onClick={() => setToolsOpen(!toolsOpen)}>
-          移动与归档
-          <IconChevronDownOutlineRegular className={cx("kb-disclosure-icon")} />
-        </Button>
-        {toolsOpen && (
-          <div>
-            {dirty && <p className={cx("kb-muted")}>请先保存当前修改，再移动或归档。</p>}
-            <div className={cx("kb-detail-row")}>
-              <label className={cx("kb-field")}>
-                移至列表
-                <Select
-                  value={target}
-                  onValueChange={(value) => {
-                    setTarget(value);
-                    setBefore("");
+          {toolsOpen && (
+            <div>
+              {dirty && <p className={cx("kb-muted")}>请先保存当前修改，再移动或归档。</p>}
+              <div className={cx("kb-detail-row")}>
+                <label className={cx("kb-field")}>
+                  移至列表
+                  <Select
+                    value={target}
+                    onValueChange={(value) => {
+                      setTarget(value);
+                      setBefore("");
+                    }}
+                    label={"移至列表"}
+                    options={[
+                      ...(lists.map((item) => ({ value: item.id, label: item.title })) ?? []),
+                    ]}
+                  />
+                </label>
+                <label className={cx("kb-field")}>
+                  位置
+                  <Select
+                    value={before}
+                    onValueChange={(value) => setBefore(value)}
+                    label={"位置"}
+                    options={[
+                      { value: "", label: "列表末尾" },
+                      ...(data.cards
+                        .filter(
+                          (item) => item.listId === target && !item.archived && item.id !== card.id,
+                        )
+                        .map((item) => ({ value: item.id, label: <>{item.title} 之前</> })) ?? []),
+                    ]}
+                  />
+                </label>
+                <Button
+                  disabled={dirty || saving}
+                  onClick={async () => {
+                    if (await move(target, before || null)) close();
                   }}
-                  label={"移至列表"}
-                  options={[
-                    ...(lists.map((item) => ({ value: item.id, label: item.title })) ?? []),
-                  ]}
-                />
-              </label>
-              <label className={cx("kb-field")}>
-                位置
-                <Select
-                  value={before}
-                  onValueChange={(value) => setBefore(value)}
-                  label={"位置"}
-                  options={[
-                    { value: "", label: "列表末尾" },
-                    ...(data.cards
-                      .filter(
-                        (item) => item.listId === target && !item.archived && item.id !== card.id,
-                      )
-                      .map((item) => ({ value: item.id, label: <>{item.title} 之前</> })) ?? []),
-                  ]}
-                />
-              </label>
+                  type="button"
+                >
+                  移动卡片
+                </Button>
+              </div>
               <Button
                 disabled={dirty || saving}
                 onClick={async () => {
-                  if (await move(target, before || null)) close();
+                  if (await archive()) close();
                 }}
                 type="button"
               >
-                移动卡片
+                归档卡片
               </Button>
             </div>
-            <Button
-              disabled={dirty || saving}
-              onClick={async () => {
-                if (await archive()) close();
-              }}
-              type="button"
-            >
-              归档卡片
-            </Button>
-          </div>
+          )}
+        </section>
+        {labelsOpen && (
+          <LabelsDialog
+            boardId={list.boardId}
+            data={data}
+            saving={saving}
+            error={error}
+            selected={draft.labels}
+            onToggle={(id) =>
+              set(
+                "labels",
+                draft.labels.includes(id)
+                  ? draft.labels.filter((item) => item !== id)
+                  : [...draft.labels, id],
+              )
+            }
+            onCreated={(id) => setDraft((old) => ({ ...old, labels: [...old.labels, id] }))}
+            mutate={changeLabels}
+            close={() => setLabelsOpen(false)}
+          />
         )}
-      </section>
-      {labelsOpen && (
-        <LabelsDialog
-          boardId={list.boardId}
-          data={data}
-          saving={saving}
-          error={error}
-          selected={draft.labels}
-          onToggle={(id) =>
-            set(
-              "labels",
-              draft.labels.includes(id)
-                ? draft.labels.filter((item) => item !== id)
-                : [...draft.labels, id],
-            )
-          }
-          onCreated={(id) => setDraft((old) => ({ ...old, labels: [...old.labels, id] }))}
-          mutate={changeLabels}
-          close={() => setLabelsOpen(false)}
-        />
-      )}
+      </div>
     </Modal>
   );
 }
