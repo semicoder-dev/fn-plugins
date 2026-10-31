@@ -1,12 +1,41 @@
 import index from "../marketplace.json";
 import manifest from "../vendor/manifest.json";
 import pkg from "../plugins/kanban/package.json";
+import models from "../plugins/models-dev/package.json";
 import { createHash } from "node:crypto";
 import { inspectPlugin } from "@semicoder/fn-sdk/build";
-if (index.schemaVersion !== 3 || !index.name || index.plugins.length)
-  throw new Error(
-    "The plugins-v1 candidate market must remain empty until verified plugins are explicitly published",
-  );
+if (index.schemaVersion !== 3 || !index.name || !Array.isArray(index.plugins))
+  throw new Error("Expected schema 3 plugin market");
+const published = index.plugins as Array<{
+  packageName: string;
+  name: string;
+  description: string;
+  version: string;
+  url: string;
+  sha256: string;
+  peers: Record<string, string>;
+  iconSvg: string;
+}>;
+const seen = new Set<string>();
+for (const entry of published) {
+  const source = [pkg, models].find((item) => item.name === entry.packageName);
+  if (!source || seen.has(entry.packageName))
+    throw new Error("Unknown or duplicate market package");
+  seen.add(entry.packageName);
+  const slug = entry.packageName.replace("@semicoder/fn-", "");
+  const expectedURL = `https://github.com/semicoder-dev/fn-plugins/releases/download/${slug}-v${source.version}/semicoder-fn-${slug}-${source.version}.tgz`;
+  if (
+    entry.version !== source.version ||
+    entry.name !== source.fn.name ||
+    entry.description !== source.description ||
+    entry.url !== expectedURL ||
+    !/^[a-f0-9]{64}$/.test(entry.sha256) ||
+    JSON.stringify(entry.peers) !== JSON.stringify(source.peerDependencies) ||
+    entry.iconSvg !==
+      (await Bun.file(new URL(`../plugins/${slug}/src/icon.svg`, import.meta.url)).text())
+  )
+    throw new Error(`Market metadata differs from verified release: ${entry.packageName}`);
+}
 for (const item of manifest.packages) {
   const actual = createHash("sha256")
     .update(
@@ -29,6 +58,4 @@ for (const name of ["kanban", "models-dev"]) {
       throw new Error(`${entry}: use original DSH controls and overlays`);
   }
 }
-console.log(
-  "Validated plugin contract, fixed development artifacts and unpublished market boundary",
-);
+console.log("Validated plugin contracts, fixed artifacts and release market metadata");

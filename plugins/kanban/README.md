@@ -1,6 +1,6 @@
 # 看板
 
-`fn-kanban` · `@semicoder/fn-kanban` · 0.1.0 本地候选，尚未发布。
+`fn-kanban` · `@semicoder/fn-kanban` · 0.1.0，适用于 fn 0.6 / SDK 0.5。
 
 用列表整理进度，用卡片记录任务。交互参考 [Trello 的卡片与列表移动](https://support.atlassian.com/trello/docs/moving-cards-or-lists/)，内容保存在本机，无需账号或模型服务。
 
@@ -26,7 +26,7 @@
 
 ## 开发与装配
 
-仅支持全插件化候选宿主，依赖快照和操作命令见仓库根 README。公开 fn 0.5.2、公开 SDK 0.4.0 不包含本契约。
+支持 fn 0.6 / SDK 0.5，固定契约和操作命令见仓库根 README。fn 0.5.2 / SDK 0.4 不包含本契约。
 
 - 后端 `src/index.ts` 注入 `host`、`rpc`、`activity`，在 `kanban` 命名空间注册契约；`src/store.ts` 独立持久化，Cordis 销毁时关闭数据库和 API。
 - 客户端导出 `./client`，注入原版 slots、默认布局、导航和 `api:kanban`，只贡献 `fn.sidebar.top` / `fn.main`（页面 key `fn-kanban`）。`@semicoder/fn-ui` 提供原版 dsh Button/Input/Menu/Modal 等组件，侧栏使用导航插件公开的 NavigationButton；CSS Modules 与 `--dsw-*` 语义 token 跟随宿主的浅色、深色或系统模式，样式与监听随插件卸载清理。工具栏、列表、详情与空态采用统一的紧凑间距、细线分隔及 dsh 图标；业务标签使用明暗适配的十色、三级浓度。`src/boards.tsx` 提供首页和单行看板顶部，复用 `navigation` 的 `fn-kanban` / `fn-kanban/<boardId>` 子路径；不改变宿主或持久化契约。`src/labels.tsx` 管理共享标签与调色板，卡片通过 UUID 关联标签。

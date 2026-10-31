@@ -9,14 +9,14 @@
         "@deepseek-ai/dsh-client-store": "0.2.1-rc.2",
         "@deepseek-ai/dsh-client-ui-renderer": "0.2.1-rc.2",
         "@deepseek-ai/dsh-client-ui-slots": "0.2.1-rc.2",
-        "@semicoder/fia": "file:./vendor/semicoder-fia-2d67742.tgz",
-        "@semicoder/fn-activity": "file:./vendor/semicoder-fn-activity-2d67742.tgz",
-        "@semicoder/fn-host": "file:./vendor/semicoder-fn-host-2d67742.tgz",
-        "@semicoder/fn-rpc": "file:./vendor/semicoder-fn-rpc-2d67742.tgz",
-        "@semicoder/fn-sdk": "file:./vendor/semicoder-fn-sdk-d4426323a9a8.tgz",
-        "@semicoder/fn-ui": "file:./vendor/semicoder-fn-ui-8393231e8983.tgz",
-        "@semicoder/fn-ui-layout": "file:./vendor/semicoder-fn-ui-layout-bf42a0aca29f.tgz",
-        "@semicoder/fn-ui-navigation": "file:./vendor/semicoder-fn-ui-navigation-b54afa5620a4.tgz",
+        "@semicoder/fia": "file:./vendor/semicoder-fia-5e9a50c30faf.tgz",
+        "@semicoder/fn-activity": "file:./vendor/semicoder-fn-activity-c959616fdf76.tgz",
+        "@semicoder/fn-host": "file:./vendor/semicoder-fn-host-3bce215e32e5.tgz",
+        "@semicoder/fn-rpc": "file:./vendor/semicoder-fn-rpc-aa2b6c539f4d.tgz",
+        "@semicoder/fn-sdk": "0.5.0",
+        "@semicoder/fn-ui": "file:./vendor/semicoder-fn-ui-abbf2691ee0d.tgz",
+        "@semicoder/fn-ui-layout": "file:./vendor/semicoder-fn-ui-layout-22ce2af6d2aa.tgz",
+        "@semicoder/fn-ui-navigation": "file:./vendor/semicoder-fn-ui-navigation-d91d969b26aa.tgz",
         "@types/bun": "1.4.3",
         "@types/react": "19.2.17",
         "@types/react-dom": "19.2.3",
@@ -28,14 +28,14 @@
     },
   },
   "overrides": {
-    "@semicoder/fia": "file:./vendor/semicoder-fia-2d67742.tgz",
-    "@semicoder/fn-activity": "file:./vendor/semicoder-fn-activity-2d67742.tgz",
-    "@semicoder/fn-host": "file:./vendor/semicoder-fn-host-2d67742.tgz",
-    "@semicoder/fn-rpc": "file:./vendor/semicoder-fn-rpc-2d67742.tgz",
-    "@semicoder/fn-sdk": "file:./vendor/semicoder-fn-sdk-d4426323a9a8.tgz",
-    "@semicoder/fn-ui": "file:./vendor/semicoder-fn-ui-8393231e8983.tgz",
-    "@semicoder/fn-ui-layout": "file:./vendor/semicoder-fn-ui-layout-bf42a0aca29f.tgz",
-    "@semicoder/fn-ui-navigation": "file:./vendor/semicoder-fn-ui-navigation-b54afa5620a4.tgz",
+    "@semicoder/fia": "file:./vendor/semicoder-fia-5e9a50c30faf.tgz",
+    "@semicoder/fn-activity": "file:./vendor/semicoder-fn-activity-c959616fdf76.tgz",
+    "@semicoder/fn-host": "file:./vendor/semicoder-fn-host-3bce215e32e5.tgz",
+    "@semicoder/fn-rpc": "file:./vendor/semicoder-fn-rpc-aa2b6c539f4d.tgz",
+    "@semicoder/fn-sdk": "0.5.0",
+    "@semicoder/fn-ui": "file:./vendor/semicoder-fn-ui-abbf2691ee0d.tgz",
+    "@semicoder/fn-ui-layout": "file:./vendor/semicoder-fn-ui-layout-22ce2af6d2aa.tgz",
+    "@semicoder/fn-ui-navigation": "file:./vendor/semicoder-fn-ui-navigation-d91d969b26aa.tgz",
   },
   "packages": {
     "@apidevtools/json-schema-ref-parser": ["@apidevtools/json-schema-ref-parser@11.9.3", "", { "dependencies": { "@jsdevtools/ono": "^7.1.3", "@types/json-schema": "^7.0.15", "js-yaml": "^4.1.0" } }, "sha512-60vepv88RwcJtSHrD6MjIL6Ta3SOYbgfnkHb+ppAVK+o9mXprRtulx7VlRl3lN3bbvysAfCS7WMVfhUYemB0IQ=="],
@@ -108,21 +108,21 @@
 
     "@oxfmt/binding-win32-x64-msvc": ["@oxfmt/binding-win32-x64-msvc@0.68.0", "", { "os": "win32", "cpu": "x64" }, "sha512-gPe+dJLXaPuWPWqlpklDAJp0k+K9KhQPYiQLHfb+i2rmFuUGfJ/5Qlj6tr1mO6of5g0DiLjG/XCFHIaPhotqqA=="],
 
-    "@semicoder/fia": ["@semicoder/fia@./vendor/semicoder-fia-2d67742.tgz", { "dependencies": { "@clack/prompts": "^1.7.0", "json-schema-to-typescript": "^15.0.0", "zod": "^4.0.0" } }, "sha512-52jkZCpM1ImRpANV40ks/yD9hWvMbg4x/Go6fex8NMpbhyKOsFyMaz/hDKFSw6cLEefWYrE0VGHZAPsOuybYjQ=="],
+    "@semicoder/fia": ["@semicoder/fia@./vendor/semicoder-fia-5e9a50c30faf.tgz", { "dependencies": { "@clack/prompts": "^1.7.0", "json-schema-to-typescript": "^15.0.0", "zod": "^4.0.0" }, "bin": { "fia": "bin/fia" } }, "sha512-dEiPPhCgWCXRLX07Etra2y7kDYq3XiDZi9tL4qxQvkrCIE91oYp5wPDuU84XXEfkUTW7aOgTu4IL1ANWj17uOw=="],
 
-    "@semicoder/fn-activity": ["@semicoder/fn-activity@./vendor/semicoder-fn-activity-2d67742.tgz", { "peerDependencies": { "@deepseek-ai/cordis": "4.0.5" } }, "sha512-6iGLIoFnP56/cPhZAZGc9gU1J23VWHiAd3dZDso3jsIqIyjdEBvTzFBIvmckEss0Z/vBIFZPNDKjUYGGNl182g=="],
+    "@semicoder/fn-activity": ["@semicoder/fn-activity@./vendor/semicoder-fn-activity-c959616fdf76.tgz", { "peerDependencies": { "@deepseek-ai/cordis": "4.0.5" } }, "sha512-axRj0EJIjLc7IciWxwXhGBpmIB8B2j5ryaEhd4PG7vVlgbDUT1QVHgIkUv24XKnz61x3MhB9AV2iRLx0ZHoxNw=="],
 
-    "@semicoder/fn-host": ["@semicoder/fn-host@./vendor/semicoder-fn-host-2d67742.tgz", { "dependencies": { "@deepseek-ai/cordis": "4.0.5", "@deepseek-ai/cordis-plugin-include": "1.0.10", "@deepseek-ai/cordis-plugin-loader": "1.0.6", "@deepseek-ai/dsh-client-modules": "0.2.1-rc.2", "@semicoder/fia": "0.18.0", "immer": "10.2.0", "zustand": "4.5.7" } }, "sha512-eISUG6a84COoUYQVedeogVJPZMkjQpklBhgvggerN2rqolXXrk1+ieQjMqoR8BUslG0Mb/mZyXM3RhK875DCpg=="],
+    "@semicoder/fn-host": ["@semicoder/fn-host@./vendor/semicoder-fn-host-3bce215e32e5.tgz", { "dependencies": { "@deepseek-ai/cordis": "4.0.5", "@deepseek-ai/cordis-plugin-include": "1.0.10", "@deepseek-ai/cordis-plugin-loader": "1.0.6", "@deepseek-ai/dsh-client-modules": "0.2.1-rc.2", "@semicoder/fia": "0.18.0", "immer": "10.2.0", "zustand": "4.5.7" } }, "sha512-dJUyGZUA8KsVqAEcrbKtkvlOU65TsCvZKiMMKlYqu0aoS8hodEMFN3V27fRTM1/uwj0c2lm4WgQ51q3x514Mjg=="],
 
-    "@semicoder/fn-rpc": ["@semicoder/fn-rpc@./vendor/semicoder-fn-rpc-2d67742.tgz", { "peerDependencies": { "@deepseek-ai/cordis": "4.0.5", "@semicoder/fia": "0.18.0", "@semicoder/fn-host": "0.0.0" } }, "sha512-+h3MNHZtktV4nC3K1u4koY0DHzgHqDzQVQOSZQAjLRwWOX8MchddqFJQ7DFbArj6Ba/7V4LKRkUj34yFsT+wyA=="],
+    "@semicoder/fn-rpc": ["@semicoder/fn-rpc@./vendor/semicoder-fn-rpc-aa2b6c539f4d.tgz", { "peerDependencies": { "@deepseek-ai/cordis": "4.0.5", "@semicoder/fia": "0.18.0", "@semicoder/fn-host": "0.0.0" } }, "sha512-cMDPhX+RF2V/AUbo8XzcSuDbmcZpYHkoaboNI0oYG8ZsVDzWMtjgKEjXyKi9DeylrXWjU0DiYMIuQGz4dNzreA=="],
 
-    "@semicoder/fn-sdk": ["@semicoder/fn-sdk@./vendor/semicoder-fn-sdk-d4426323a9a8.tgz", { "dependencies": { "zod": "4.6.5" }, "peerDependencies": { "@deepseek-ai/cordis": "4.0.5", "@deepseek-ai/dsh-client-ui-renderer": "0.2.1-rc.2", "@deepseek-ai/dsh-client-ui-slots": "0.2.1-rc.2", "@semicoder/fia": "0.18.0", "react": ">=19 <20", "react-dom": ">=19 <20" } }, "sha512-URWIo/HwjOWixJf+EXLZYhAaOxmG3SgXrgAupbVk6KjRwY8eugtW0pbZzd3AkzIYieUKVgCCukIHBJKsaoaNcA=="],
+    "@semicoder/fn-sdk": ["@semicoder/fn-sdk@0.5.0", "", { "dependencies": { "zod": "4.6.5" }, "peerDependencies": { "@deepseek-ai/cordis": "4.0.5", "@deepseek-ai/dsh-client-ui-renderer": "0.2.1-rc.2", "@deepseek-ai/dsh-client-ui-slots": "0.2.1-rc.2", "@semicoder/fia": "0.18.0", "react": ">=19 <20", "react-dom": ">=19 <20" } }, "sha512-QIS9BgOjnGqLz9UHGJaZUc1RdVkWslOg02M6zD9/HSlMRFFNR9veN4tGxYPYzpNFl1XkJGbaDoz8adYzqXB6Uw=="],
 
-    "@semicoder/fn-ui": ["@semicoder/fn-ui@./vendor/semicoder-fn-ui-8393231e8983.tgz", { "dependencies": { "@deepseek-ai/dsh-client-store": "0.2.1-rc.2", "@deepseek-ai/dsh-client-ui-primitives": "0.2.1-rc.2", "@deepseek-ai/dsh-util-code-language": "0.2.1-rc.2", "@deepseek-ai/dsh-util-workspace-path": "0.2.1-rc.2", "@shikijs/langs": "4.4.3", "@types/mdast": "4.0.4", "anser": "2.3.5", "clsx": "2.1.1", "diff": "9.0.0", "katex": "0.18.7", "mdast-util-from-markdown": "2.0.3", "mdast-util-gfm": "3.1.0", "mdast-util-math": "3.0.0", "micromark-core-commonmark": "2.0.3", "micromark-extension-gfm": "3.0.0", "micromark-extension-math": "3.1.0", "micromark-factory-space": "2.0.1", "micromark-util-character": "2.1.1", "micromark-util-classify-character": "2.0.1", "micromark-util-sanitize-uri": "2.0.1", "micromark-util-symbol": "2.0.1", "micromark-util-types": "2.0.2", "shiki": "4.4.3", "simple-icons": "16.31.0" }, "peerDependencies": { "@deepseek-ai/cordis": "4.0.5", "react": "19.2.7", "react-dom": "19.2.7" } }, "sha512-YQ/k02J40DKDf34OYnOoyW3RqmKQxSxetMTN63usXKqnf3AcFxaXGE/n/1V28juwYFDj24naF3p2rA7lTwqpbQ=="],
+    "@semicoder/fn-ui": ["@semicoder/fn-ui@./vendor/semicoder-fn-ui-abbf2691ee0d.tgz", { "dependencies": { "@deepseek-ai/dsh-client-store": "0.2.1-rc.2", "@deepseek-ai/dsh-client-ui-primitives": "0.2.1-rc.2", "@deepseek-ai/dsh-util-code-language": "0.2.1-rc.2", "@deepseek-ai/dsh-util-workspace-path": "0.2.1-rc.2", "@shikijs/langs": "4.4.3", "@types/mdast": "4.0.4", "anser": "2.3.5", "clsx": "2.1.1", "diff": "9.0.0", "katex": "0.18.7", "mdast-util-from-markdown": "2.0.3", "mdast-util-gfm": "3.1.0", "mdast-util-math": "3.0.0", "micromark-core-commonmark": "2.0.3", "micromark-extension-gfm": "3.0.0", "micromark-extension-math": "3.1.0", "micromark-factory-space": "2.0.1", "micromark-util-character": "2.1.1", "micromark-util-classify-character": "2.0.1", "micromark-util-sanitize-uri": "2.0.1", "micromark-util-symbol": "2.0.1", "micromark-util-types": "2.0.2", "shiki": "4.4.3", "simple-icons": "16.31.0" }, "peerDependencies": { "@deepseek-ai/cordis": "4.0.5", "react": "19.2.7", "react-dom": "19.2.7" } }, "sha512-Bt6Xi4AozGpn5QAD9pabjkOFOnZxcyYe8V145d2nGwwEzFqGaKNYJbWHSVWiYSmHjLtUjPI+tBma2LxCpTvpeQ=="],
 
-    "@semicoder/fn-ui-layout": ["@semicoder/fn-ui-layout@./vendor/semicoder-fn-ui-layout-bf42a0aca29f.tgz", { "peerDependencies": { "@deepseek-ai/cordis": "4.0.5", "@deepseek-ai/dsh-client-ui-slots": "0.2.1-rc.2", "@semicoder/fn-sdk": "0.4.0", "@semicoder/fn-ui": "0.0.0", "@semicoder/fn-ui-navigation": "0.0.0", "react": "19.2.7" } }, "sha512-2bY9tW+iwsYwDUZtpsyoYwogSVw3wKB20ZoM1e8g2VrN1wZk5O9hlRdex1p5Yt20hPGlzWkr8M5Vb/lyIsfc8w=="],
+    "@semicoder/fn-ui-layout": ["@semicoder/fn-ui-layout@./vendor/semicoder-fn-ui-layout-22ce2af6d2aa.tgz", { "peerDependencies": { "@deepseek-ai/cordis": "4.0.5", "@deepseek-ai/dsh-client-ui-slots": "0.2.1-rc.2", "@semicoder/fn-sdk": "0.5.0", "@semicoder/fn-ui": "0.0.0", "@semicoder/fn-ui-navigation": "0.0.0", "react": "19.2.7" } }, "sha512-Pa9341Rkkyia9MfjxVYGNCPcF+qiLhuKHIquTMKDArEh0MDc0iV9j+8UHjmE9sx8oPorP3/3sdnhTJdJtbCm8g=="],
 
-    "@semicoder/fn-ui-navigation": ["@semicoder/fn-ui-navigation@./vendor/semicoder-fn-ui-navigation-b54afa5620a4.tgz", { "peerDependencies": { "@deepseek-ai/cordis": "4.0.5", "@semicoder/fn-ui": "0.0.0", "react": "19.2.7" } }, "sha512-Vpcx1KwlaVPlhz/KgDUv+j+9UwHI9DKRvvSLwvegRsZ/n5m1dMD/hqnHcX+rOSDpzup5krBmNs2AcmHl+z3XyQ=="],
+    "@semicoder/fn-ui-navigation": ["@semicoder/fn-ui-navigation@./vendor/semicoder-fn-ui-navigation-d91d969b26aa.tgz", { "peerDependencies": { "@deepseek-ai/cordis": "4.0.5", "@semicoder/fn-ui": "0.0.0", "react": "19.2.7" } }, "sha512-IcZRGPVobcAIUtblXu+T2GPZQDnqIJmy64QKacNajxJXwQ8LFzchbmVWIl6It0TUGIKQXRVukVhsz+TNu21/+w=="],
 
     "@shikijs/core": ["@shikijs/core@4.4.3", "", { "dependencies": { "@shikijs/primitive": "4.4.3", "@shikijs/types": "4.4.3", "@shikijs/vscode-textmate": "^10.0.2", "@types/hast": "^3.0.5", "hast-util-to-html": "^9.0.5" } }, "sha512-QCR4q2ZO/ILJEuwiBMel4wdcTDb1JGwfjKTxPDF6x8ixOaluPrVqIn06C99AcRPhmYlBR56d/Fb+GN58GzExpg=="],
 
