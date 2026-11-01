@@ -1,6 +1,6 @@
 {
   "app.name": "Stock example",
-  "app.description": "Widget and background lifecycle example",
+  "app.description": "Dynamic summary and background lifecycle example",
   "demo": "Example data · not live quotes",
   "price": "Example price"
 }

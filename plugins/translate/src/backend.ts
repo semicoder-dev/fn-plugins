@@ -19,22 +19,13 @@ export default defineBackend({
       );
     const publish = async () => {
       const last = history()[0];
-      await host.widgets.publish("summary", {
-        version: 1,
-        body: {
-          type: "column",
-          children: last
-            ? [
-                {
-                  type: "text",
-                  text: last.source.slice(0, 180),
-                  variant: "caption",
-                },
-                { type: "text", text: last.text.slice(0, 360) },
-              ]
-            : [{ type: "text", text: { key: "empty" } }],
-        },
-      });
+      await host.application
+        .setSummary({
+          version: 1,
+          text: last ? last.text.slice(0, 360) : { key: "empty" },
+          ...(last ? { detail: last.source.slice(0, 180) } : {}),
+        })
+        .catch((error) => console.error("Summary update failed", error));
     };
     async function* translate(
       value: typeof input._output,
@@ -83,6 +74,9 @@ export default defineBackend({
         $text: record.text,
         $createdAt: record.createdAt,
       });
+      await host.application
+        .notifyDataChanged()
+        .catch((error) => console.error("View notification failed", error));
       await publish();
       yield { type: "completed" as const, record };
     }

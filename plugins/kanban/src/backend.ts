@@ -18,36 +18,26 @@ export default defineBackend({
               state.boards.some((b) => b.id === l.boardId && !b.archived),
           ),
       );
-      await host.widgets.publish("summary", {
-        version: 1,
-        body: {
-          type: "column",
-          children: [
+      await host.application
+        .setSummary({
+          version: 1,
+          metrics: [
             {
-              type: "row",
-              children: [
-                {
-                  type: "metric",
-                  value: state.boards.filter((b) => !b.archived).length,
-                  label: { key: "boards" },
-                },
-                {
-                  type: "metric",
-                  value: cards.filter((c) => !c.done).length,
-                  label: { key: "remaining" },
-                },
-              ],
+              value: state.boards.filter((b) => !b.archived).length,
+              label: { key: "boards" },
             },
             {
-              type: "list",
-              children: cards
-                .filter((c) => !c.done)
-                .slice(0, 3)
-                .map((c) => ({ type: "text" as const, text: c.title })),
+              value: cards.filter((c) => !c.done).length,
+              label: { key: "remaining" },
             },
           ],
-        },
-      });
+          text: cards
+            .filter((c) => !c.done)
+            .slice(0, 3)
+            .map((c) => c.title)
+            .join(" · ") || { key: "app.description" },
+        })
+        .catch((error) => console.error("Summary update failed", error));
     };
     await publish();
     return {
@@ -55,6 +45,9 @@ export default defineBackend({
         read: () => store.read(),
         mutate: async (input) => {
           const result = store.mutate(input, (await host.preferences()).locale);
+          await host.application
+            .notifyDataChanged()
+            .catch((error) => console.error("View notification failed", error));
           await publish();
           return result;
         },

@@ -46,3 +46,22 @@ test("release identity and catalog reject ambiguous or untrusted entries", () =>
     readCatalog({ schema: 1, applications: [{ ...app, sha256: "wrong" }] }),
   ).toThrow();
 });
+
+test("release rejects local overrides and non-exact SDK dependencies", async () => {
+  const { checkReleaseDependencies } =
+    await import("../../../scripts/check-release-dependencies.ts");
+  expect(() =>
+    checkReleaseDependencies({
+      dependencies: { "@semicoder/fn-sdk": "0.7.0" },
+      devDependencies: { "@semicoder/fn-ui": "0.2.0" },
+    }),
+  ).not.toThrow();
+  const invalid: Parameters<typeof checkReleaseDependencies>[0][] = [
+    { overrides: { "@semicoder/fn-sdk": "file:vendor/sdk.tgz" } },
+    { dependencies: { "@semicoder/fn-sdk": "^0.7.0" } },
+    { dependencies: { other: "file:../other" } },
+    { devDependencies: { "@semicoder/fn-ui": "workspace:*" } },
+  ];
+  for (const pkg of invalid)
+    expect(() => checkReleaseDependencies(pkg)).toThrow();
+});

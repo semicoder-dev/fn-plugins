@@ -1,6 +1,7 @@
 import { inspectPlugin } from "@semicoder/fn-sdk/build";
 for (const app of ["translate", "notes", "kanban", "models-dev"])
   await inspectPlugin("plugins/" + app);
+await inspectPlugin("examples/stocks");
 for (const path of [
   "package.json",
   "bun.lock",

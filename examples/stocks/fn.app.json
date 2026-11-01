@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "id": "fn-stock-example",
-  "version": "0.1.0",
-  "hostApi": 1,
+  "version": "0.3.0",
+  "hostApi": 2,
   "name": {
     "key": "app.name"
   },
@@ -19,14 +19,10 @@
       "zh-CN": "locales/zh-CN.json"
     }
   },
-  "uses": ["widgets.publish"],
+  "uses": ["application.summary"],
   "contributes": {
-    "widgets": [
-      {
-        "id": "prices",
-        "size": "3x1",
-        "initial": "widgets/prices.json"
-      }
-    ]
+    "summary": {
+      "initial": "summary/initial.json"
+    }
   }
 }

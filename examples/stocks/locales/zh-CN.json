@@ -1,6 +1,6 @@
 {
   "app.name": "行情示例",
-  "app.description": "小组件与后台生命周期开发示例",
+  "app.description": "动态摘要与后台生命周期示例",
   "demo": "示例数据 · 非实时行情",
   "price": "示例价格"
 }

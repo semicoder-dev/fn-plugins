@@ -1,6 +1,6 @@
 # Fn 官方应用
 
-翻译、笔记、看板和模型目录以独立 TypeScript 应用交付。宿主统一模型、窗口、UI、小组件和手机文字路由；应用管理业务与 Bun SQLite 数据。四个应用使用 SDK 0.6.0 与 Fn UI 0.1.0 的精确 npm 依赖，适用于 Fn 0.7。
+翻译、笔记、看板和模型目录以独立 TypeScript 应用交付。宿主统一模型、窗口、UI、应用摘要和手机文字路由；应用管理业务与 Bun SQLite 数据。0.3.0 使用 Fn 0.8 的 hostApi 2、SDK 0.7.0 和 UI 0.2.0。宿主构建不依赖本仓。
 
 ```sh
 bun install --frozen-lockfile --ignore-scripts
@@ -14,22 +14,25 @@ bun run market:local
 
 | 应用 | 能力 |
 | --- | --- |
-| translate | ChatGPT 订阅 Responses 翻译、历史、计数小组件、手机翻译入口 |
-| notes | 笔记编辑、搜索、持久化、冲突检查、摘要小组件 |
+| translate | ChatGPT 订阅 Responses 翻译、历史、最近译文摘要、手机翻译入口 |
+| notes | 笔记编辑、搜索、持久化、冲突检查、数量与最近内容摘要 |
 | kanban | 多看板、列表、拖动、卡片详情、标签、日期、检查清单与归档 |
 | models-dev | models.dev API 模型目录、筛选、规格、供应商价格及离线缓存 |
-| examples/stocks | 无页面后台示例，生成明确标注的模拟行情小组件；不连接真实金融数据 |
+| examples/stocks | 无页面后台示例，生成明确标注的模拟行情应用摘要；不连接真实金融数据 |
 
 业务数据写入 host.paths.data，更新代码保留数据。所有静态文案包含 en/zh-CN，用户内容保持原文。关闭应用停止后台，最小化继续运行。
 
-日常构建使用公开 npm 精确版本。联调未发布 SDK 时可在 Fn 构建 `bun run npm:pack` 后，运行 `bun scripts/vendor-sdk.ts <artifact-directory>`，再冻结安装并重新检查、测试和打包。归档脱离 workspace 也必须可消费。版本号不是内容摘要，开发归档不能宣称为公共 npm 的同版本包。
+正式发行精确依赖公开 npm SDK/UI，不使用 overrides 或本地路径。开发联调可以在 Fn 构建 `bun run npm:pack` 后运行 `bun scripts/vendor-sdk.ts <artifact-directory>`，但发布前必须恢复公开版本和冻结锁文件。版本号不是内容摘要。
 
-开发：在应用目录执行 `fn plugin dev . --browser`；应用使用真实宿主，源码变化中断当前任务并重启开发实例。小组件预览使用 `fn plugin widget widgets/summary.json --preview`。
+开发：在应用目录执行 `fn plugin dev . --browser`；应用使用真实宿主，源码变化中断当前任务并重启开发实例。应用摘要预览使用 `fn plugin summary summary/initial.json --preview`。
 
-三个官方应用的小组件固定声明 `size: "1x1"`，行情示例为 `size: "3x1"`。size 表示列数 x 行数，每个维度为 1–4，由插件决定；卡片按固定网格靠左排列，「整理桌面」支持排序和移除。预览器按照 Manifest 的固定尺寸渲染。
 
-## 正式发布
+每个应用只有一份结构化摘要，不声明尺寸或嵌套布局。后台 setSummary 更新内容，notifyDataChanged 独立通知页面；应用关闭后保留最后摘要。
 
-应用独立发版，当前三个首批应用为 0.2.0，模型目录为 0.2.1，均已在正式市场提供。`bun scripts/release.ts 0.2.1 models-dev` 验证该应用归档，保留 `release/catalog.json` 中其他应用的公开地址和摘要，生成完整市场与 `release.json`。发布前若线上市场偏离基线则停止，避免覆盖并行更新。后续发版前将已验收的线上目录同步为基线。
+## 应用列表候选验收（2026-11-01）
 
-`models-dev-v0.2.1` 等单应用标签通过 release.yml 构建、测试、打包、创建 GitHub Release，再下载核对归档与完整公开市场后部署 Pages。`apps-v<version>` 支持统一发版，要求所有应用版本一致；GitHub Pages 环境按精确标签授权。手动工作流指定 application/version 只生成候选，不发布。安装包、市场、宿主和官网依次验收，手机正式版本单独交付。
+hostApi 2 本地候选已通过 check、28 测试/129 断言、四应用和行情示例打包，以及仓库外冻结安装/检查/测试/打包。当时 SDK/UI 来源固定在本地归档清单，不是同版本公开 npm 产物；发行准备已切换精确公开依赖。笔记与看板真实窗口写入、双视图通知、行情持续摘要、关闭/重启缓存和替换包后业务数据保留已在独立 Fn List QA 验证。翻译使用受控模型响应测试，摘要失败不影响已提交的业务成功。版本未改、未发布，公开市场保持现状。
+
+## GitHub CI/CD
+
+PR、main 和手动 CI 执行检查、测试、四应用及行情打包、`scripts/verify-independent.ts` 仓库外冻结消费。发布流程额外运行 `scripts/check-release-dependencies.ts`，拒绝本地 SDK/UI 及 overrides；版本/tag 校验后生成归档和市场。只有推送精确发行标签才发布，手动执行仅构建候选。公开归档校验通过后切换 Pages，已有归档不覆盖，未更新应用条目保持。环境采用精确标签许可和现有审核。

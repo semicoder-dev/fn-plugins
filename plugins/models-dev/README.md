@@ -16,4 +16,4 @@ bun run pack
 bun run market:local
 ```
 
-在隔离 Fn 开发实例安装 `plugins/models-dev/fn-models-dev-0.2.1.fn.tgz`，或添加本地市场。发行标签为 `models-dev-v0.2.1`，普通构建不修改生产市场；正式归档与市场状态以发行验收记录为准。使用时从应用中心刷新官方市场并安装「模型目录」，无需升级 Fn 或配置 API Key。
+在隔离 Fn 开发实例安装 `plugins/models-dev/fn-models-dev-0.3.0.fn.tgz`，或添加本地市场。发行标签为 `apps-v0.3.0`，普通构建不修改生产市场；正式归档与市场状态以发行验收记录为准。使用时从应用中心刷新官方市场并安装「模型目录」，需要 Fn 0.8 / hostApi 2，无需配置 API Key。

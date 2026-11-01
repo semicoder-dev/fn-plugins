@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "id": "fn-translate",
-  "version": "0.2.0",
-  "hostApi": 1,
+  "version": "0.3.0",
+  "hostApi": 2,
   "name": {
     "key": "app.name"
   },
@@ -20,20 +20,16 @@
       "en": "locales/en.json"
     }
   },
-  "uses": ["widgets.publish", "models.responses", "chat.receive"],
+  "uses": ["application.summary", "models.responses", "chat.receive"],
   "contributes": {
-    "widgets": [
-      {
-        "id": "summary",
-        "size": "1x1",
-        "initial": "widgets/summary.json"
-      }
-    ],
     "chat": {
       "id": "translate",
       "name": {
         "key": "app.name"
       }
+    },
+    "summary": {
+      "initial": "summary/initial.json"
     }
   }
 }

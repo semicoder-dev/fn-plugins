@@ -1,6 +1,6 @@
 # Fn 官方应用
 
-首批应用为翻译、笔记、看板。应用通过 fn.app.json 声明 TypeScript 页面、后台、小组件和可选聊天入口，独立消费精确的公开 Fn SDK/UI npm 版本，宿主不依赖本仓构建。
+首批应用为翻译、笔记、看板。应用通过 fn.app.json 声明 TypeScript 页面、后台、应用摘要和可选聊天入口，独立消费精确的公开 Fn SDK/UI npm 版本，宿主不依赖本仓构建。
 
 - 使用 Bun 1.4.4、React、自有 Fn UI、CSS Modules 和语义变量；不使用 Cordis、dsh、pi-ai、Vite、Tailwind、oxfmt。
 - 页面自包含打包 React、SDK/UI；主题语言由宿主下发。后台 TypeScript 与冻结依赖进入发行包，安装不执行包脚本。

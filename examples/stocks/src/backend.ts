@@ -9,21 +9,14 @@ export default defineBackend({
     const publish = async () => {
       if (stopped) return;
       const value = values[index++ % values.length]!;
-      await host.widgets.publish("prices", {
-        version: 1,
-        body: {
-          type: "column",
-          children: [
-            { type: "text", text: { key: "demo" } },
-            {
-              type: "metric",
-              label: { key: "price" },
-              value: value.toFixed(2),
-            },
-            { type: "sparkline", values },
-          ],
-        },
-      });
+      await host.application
+        .setSummary({
+          version: 1,
+          text: { key: "demo" },
+          metrics: [{ label: { key: "price" }, value: value.toFixed(2) }],
+          sparkline: { values, tone: "success" },
+        })
+        .catch((error) => console.error("Summary update failed", error));
     };
     await publish();
     const timer = setInterval(() => void publish().catch(() => {}), 3000);
