@@ -1,6 +1,6 @@
 # Fn 官方应用
 
-翻译、笔记、看板和模型目录以独立 TypeScript 应用交付。宿主统一模型、窗口、UI、应用摘要和手机文字路由；应用管理业务与 Bun SQLite 数据。公开 0.3.0 使用 Fn 0.8 的 hostApi 2、SDK 0.7.0 和 UI 0.2.0；main 开发依赖更新为 SDK 0.7.1 / UI 0.2.1，应用版本、已发布归档与市场不变。宿主构建不依赖本仓。
+翻译、笔记、看板和模型目录以独立 TypeScript 应用交付。宿主统一模型、窗口、UI、应用摘要和手机文字路由；应用管理业务与 Bun SQLite 数据。公开看板 0.3.1 使用 SDK 0.7.1 / UI 0.2.1；翻译、笔记和模型目录继续使用原 0.3.0 正式归档。均适用 Fn 0.8 的 hostApi 2；main 开发依赖为 SDK 0.7.1 / UI 0.2.1。宿主构建不依赖本仓。
 
 ```sh
 bun install --frozen-lockfile --ignore-scripts
@@ -35,6 +35,6 @@ bun run market:local
 
 ## GitHub CI/CD
 
-看板 0.3.1 发布准备：修复内部标题/标签多余边框并使用 SDK 0.7.1/UI 0.2.1 构建。其余应用继续保留 0.3.0 正式归档；公开状态以发行验证记录为准。
+看板 0.3.1 已公开：`kanban-v0.3.1` 固定 `b2db645`，正式流程 [41284829243](https://github.com/semicoder-dev/fn-plugins/actions/runs/41284829243) 成功。匿名归档与 CI 逐字节一致，SHA-256 `01619c3accfda1531ea7f3ada7b1407bb95af10070432b174841252a5beeb9e7`；其余三应用 URL/摘要保留。真实 Fn 0.8 应用中心从 0.3.0 更新，238 个业务文件和偏好不变，879 个安装文件与公开包一致。详见 `plugins/kanban/acceptance.md`。
 
 PR、main 和手动 CI 执行检查、测试、四应用及行情打包、`scripts/verify-independent.ts` 仓库外冻结消费。发布流程额外运行 `scripts/check-release-dependencies.ts`，拒绝本地 SDK/UI 及 overrides；版本/tag 校验后生成归档和市场。只有推送精确发行标签才发布，手动执行仅构建候选。公开归档校验通过后切换 Pages，已有归档不覆盖，未更新应用条目保持。环境采用精确标签许可和现有审核。

@@ -19,11 +19,11 @@
     },
     {
       "id": "fn-kanban",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "name": "看板",
       "description": "用看板、列表和任务整理工作",
-      "url": "https://github.com/semicoder-dev/fn-plugins/releases/download/apps-v0.3.0/fn-kanban-0.3.0.fn.tgz",
-      "sha256": "38615ca1d3bf72587ad20731337f71ed3168b8d53e48aeafb2c4c2c9654dbff6"
+      "url": "https://github.com/semicoder-dev/fn-plugins/releases/download/kanban-v0.3.1/fn-kanban-0.3.1.fn.tgz",
+      "sha256": "01619c3accfda1531ea7f3ada7b1407bb95af10070432b174841252a5beeb9e7"
     },
     {
       "id": "fn-models-dev",
