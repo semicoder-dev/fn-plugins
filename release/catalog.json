@@ -27,11 +27,11 @@
     },
     {
       "id": "fn-models-dev",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "name": "模型目录",
       "description": "通过 models.dev API 查询模型规格、能力与供应商价格",
-      "url": "https://github.com/semicoder-dev/fn-plugins/releases/download/models-dev-v0.2.0/fn-models-dev-0.2.0.fn.tgz",
-      "sha256": "33f8d4010f3dc0aac0f2c3832a49c0aa1c9e7a5d412edb2c3b89a5430fee69ca"
+      "url": "https://github.com/semicoder-dev/fn-plugins/releases/download/models-dev-v0.2.1/fn-models-dev-0.2.1.fn.tgz",
+      "sha256": "bc2c0693b5315d4ab8f186c7dcb56297141b2ab8e13c2ebe4a4a07088fc03e69"
     }
   ]
 }
