@@ -17,6 +17,7 @@ bun run market:local
 | translate | ChatGPT 订阅 Responses 翻译、历史、计数小组件、手机翻译入口 |
 | notes | 笔记编辑、搜索、持久化、冲突检查、摘要小组件 |
 | kanban | 多看板、列表、拖动、卡片详情、标签、日期、检查清单与归档 |
+| models-dev | models.dev API 模型目录、筛选、规格、供应商价格及离线缓存 |
 | examples/stocks | 无页面后台示例，生成明确标注的模拟行情小组件；不连接真实金融数据 |
 
 业务数据写入 host.paths.data，更新代码保留数据。所有静态文案包含 en/zh-CN，用户内容保持原文。关闭应用停止后台，最小化继续运行。
@@ -29,4 +30,6 @@ bun run market:local
 
 ## 正式发布
 
-三个应用统一 0.2.0。`bun scripts/release.ts 0.2.0` 验证归档身份并生成摘要索引。`apps-v0.2.0` 标签通过 release.yml 构建、测试、打包、创建 GitHub Release，再下载核对归档后部署 Pages 索引。手动工作流只生成候选，不发布。安装包、市场、宿主和官网依次验收，手机正式版本单独交付。
+应用独立发版，当前三个首批应用为 0.2.0，模型目录准备发布 0.2.0。`bun scripts/release.ts 0.2.0 models-dev` 验证该应用归档，保留 `release/catalog.json` 中其他应用的公开地址和摘要，生成完整市场与 `release.json`。发布前若线上市场偏离基线则停止，避免覆盖并行更新。后续发版前将已验收的线上目录同步为基线。
+
+`models-dev-v0.2.0` 等单应用标签通过 release.yml 构建、测试、打包、创建 GitHub Release，再下载核对归档与完整公开市场后部署 Pages。`apps-v<version>` 支持统一发版，要求所有应用版本一致；GitHub Pages 环境按精确标签授权。手动工作流指定 application/version 只生成候选，不发布。安装包、市场、宿主和官网依次验收，手机正式版本单独交付。

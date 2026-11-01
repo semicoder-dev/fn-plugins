@@ -1,16 +1,59 @@
 import { mkdir } from "node:fs/promises";
 import { resolve } from "node:path";
+import { readCatalog, mergeCatalog, releaseIdentity } from "./release-utils.ts";
 // CI only: create immutable release assets, verify downloaded bytes, then expose the catalog.
 const input = resolve(process.argv[2] ?? "release-bundle");
 const site = resolve(process.argv[3] ?? "published-site");
-const index = await Bun.file(resolve(input, "applications.json")).json();
-const version = index.applications[0]?.version;
-const tag = `apps-v${version}`;
+const index = readCatalog(
+  await Bun.file(resolve(input, "applications.json")).json(),
+);
+const release = await Bun.file(resolve(input, "release.json")).json();
+const { version, tag } = release;
+const selected = readCatalog({
+  schema: 1,
+  applications: release.applications,
+}).applications;
+const scope =
+  tag === `apps-v${version}`
+    ? "all"
+    : tag.slice(0, -(String(version).length + 2));
+const identity = releaseIdentity(version, scope);
+if (
+  identity.tag !== tag ||
+  selected.length !== identity.names.length ||
+  !identity.names.every((name) =>
+    selected.some(
+      (app) =>
+        app.id === `fn-${name}` &&
+        app.version === version &&
+        app.url ===
+          `https://github.com/semicoder-dev/fn-plugins/releases/download/${tag}/${app.id}-${version}.fn.tgz`,
+    ),
+  ) ||
+  JSON.stringify(mergeCatalog(readCatalog(release.baseline), selected)) !==
+    JSON.stringify(index)
+)
+  throw new Error("Release manifest and catalog differ");
 if (
   process.env.GITHUB_REPOSITORY !== "semicoder-dev/fn-plugins" ||
   process.env.GITHUB_REF !== `refs/tags/${tag}`
 )
   throw new Error("Release identity mismatch");
+const catalogURL =
+  "https://semicoder-dev.github.io/fn-plugins/applications.json";
+const current = await fetch(catalogURL, {
+  cache: "no-store",
+  signal: AbortSignal.timeout(30000),
+});
+if (!current.ok) throw new Error("Cannot verify current market");
+const live = readCatalog(await current.json());
+if (
+  JSON.stringify(live) !== JSON.stringify(release.baseline) &&
+  JSON.stringify(live) !== JSON.stringify(index)
+)
+  throw new Error(
+    "Market changed since release baseline; refusing to overwrite it",
+  );
 async function gh(args: string[]) {
   const child = Bun.spawn(
     ["gh", ...args, "--repo", "semicoder-dev/fn-plugins"],
@@ -33,10 +76,9 @@ try {
   if (!String(error).includes("release not found")) throw error;
 }
 if (!existing) {
-  const notes =
-    "翻译、笔记和看板应用 0.2.0。适用于 Fn 0.7，使用 SDK 0.6.0 与 Fn UI 0.1.0。应用中心通过摘要校验安装包；手机入口另行发布。";
-  const notesPath = resolve(input, "notes.md");
-  await Bun.write(notesPath, notes);
+  const notesPath = resolve("release/notes", `${tag}.md`);
+  if (!(await Bun.file(notesPath).exists()))
+    throw new Error("Missing release notes");
   await gh([
     "release",
     "create",
@@ -44,13 +86,14 @@ if (!existing) {
     "--verify-tag",
     "--draft",
     "--title",
-    `Fn applications ${version}`,
+    selected.length === 1
+      ? `${selected[0]!.name} ${version}`
+      : `Fn applications ${version}`,
     "--notes-file",
     notesPath,
-    ...index.applications.map((app: any) =>
-      resolve(input, `${app.id}-${app.version}.fn.tgz`),
-    ),
+    ...selected.map((app) => resolve(input, `${app.id}-${app.version}.fn.tgz`)),
     resolve(input, "applications.json"),
+    resolve(input, "release.json"),
   ]);
 }
 const verify = resolve(input, "verified");
@@ -59,7 +102,7 @@ await gh(["release", "download", tag, "--dir", verify]);
 const downloaded = await Bun.file(resolve(verify, "applications.json")).text();
 if (downloaded !== (await Bun.file(resolve(input, "applications.json")).text()))
   throw new Error("Published catalog differs");
-for (const app of index.applications) {
+for (const app of selected) {
   const bytes = await Bun.file(
     resolve(verify, `${app.id}-${app.version}.fn.tgz`),
   ).bytes();
@@ -68,6 +111,19 @@ for (const app of index.applications) {
 }
 if (!existing || existing.isDraft)
   await gh(["release", "edit", tag, "--draft=false", "--latest"]);
+// Verify the complete public catalog, including retained applications, before Pages switches.
+for (const app of index.applications) {
+  const response = await fetch(app.url, { signal: AbortSignal.timeout(60000) });
+  if (
+    !response.ok ||
+    new Bun.CryptoHasher("sha256")
+      .update(await response.bytes())
+      .digest("hex") !== app.sha256
+  )
+    throw new Error(
+      "Public application archive failed verification: " + app.id,
+    );
+}
 await mkdir(site, { recursive: true });
 await Bun.write(resolve(site, "applications.json"), downloaded);
 await Bun.write(

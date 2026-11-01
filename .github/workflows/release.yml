@@ -1,12 +1,16 @@
 name: Release Fn applications
 on:
   push:
-    tags: ["apps-v*"]
+    tags: ["apps-v*", "translate-v*", "notes-v*", "kanban-v*", "models-dev-v*"]
   workflow_dispatch:
     inputs:
       version:
         required: true
         default: "0.2.0"
+      application:
+        type: choice
+        options: [all, translate, notes, kanban, models-dev]
+        default: all
 permissions:
   contents: read
 concurrency:
@@ -27,7 +31,12 @@ jobs:
       - name: Verify application release archives
         env:
           RELEASE_VERSION: ${{ inputs.version }}
-        run: bun scripts/release.ts "${RELEASE_VERSION:-${GITHUB_REF_NAME#apps-v}}"
+          RELEASE_APPLICATION: ${{ inputs.application }}
+        run: |
+          version="${RELEASE_VERSION:-${GITHUB_REF_NAME##*-v}}"
+          application="${RELEASE_APPLICATION:-${GITHUB_REF_NAME%-v*}}"
+          if [ "$application" = "apps" ]; then application=all; fi
+          bun scripts/release.ts "$version" "$application"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: fn-applications

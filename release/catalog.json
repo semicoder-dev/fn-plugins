@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "applications": [
+    {
+      "id": "fn-translate",
+      "version": "0.2.0",
+      "name": "翻译",
+      "description": "使用 ChatGPT 账号翻译文字",
+      "url": "https://github.com/semicoder-dev/fn-plugins/releases/download/apps-v0.2.0/fn-translate-0.2.0.fn.tgz",
+      "sha256": "8bae9a54a3dc437b5bcba4786e5a44416761e6181a705b0322d80a401e324c1c"
+    },
+    {
+      "id": "fn-notes",
+      "version": "0.2.0",
+      "name": "笔记",
+      "description": "记录想法，保存在本机",
+      "url": "https://github.com/semicoder-dev/fn-plugins/releases/download/apps-v0.2.0/fn-notes-0.2.0.fn.tgz",
+      "sha256": "d3bf5ecf735e5bddd1c59e38dd5269d749ee27f1ccddc7a82d605ade0fbb7af7"
+    },
+    {
+      "id": "fn-kanban",
+      "version": "0.2.0",
+      "name": "看板",
+      "description": "用看板、列表和任务整理工作",
+      "url": "https://github.com/semicoder-dev/fn-plugins/releases/download/apps-v0.2.0/fn-kanban-0.2.0.fn.tgz",
+      "sha256": "31c14a4be64d6a8122f64aca3fd129c89f08bc2238d832d743eb8d42f5338537"
+    }
+  ]
+}

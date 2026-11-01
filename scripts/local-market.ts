@@ -10,7 +10,7 @@ const applications: {
     sha256: string;
   }[] = [],
   files = new Map<string, string>();
-for (const name of ["translate", "notes", "kanban"]) {
+for (const name of ["translate", "notes", "kanban", "models-dev"]) {
   const manifest = await Bun.file(`plugins/${name}/fn.app.json`).json();
   const filename = `${manifest.id}-${manifest.version}.fn.tgz`,
     path = resolve(`plugins/${name}`, filename);

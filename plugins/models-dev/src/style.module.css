@@ -1,0 +1,205 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--fn-border);
+}
+.header h1 {
+  font-size: 16px;
+  margin: 0;
+  white-space: nowrap;
+}
+.header a {
+  font-size: 12px;
+  white-space: nowrap;
+  color: var(--fn-secondary);
+}
+.search {
+  flex: 1;
+  min-width: 80px;
+}
+.search > span {
+  width: 100%;
+}
+.heading {
+  flex: 1;
+  min-width: 0;
+}
+.heading h1,
+.heading span {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+.heading span {
+  font-size: 12px;
+  color: var(--fn-muted);
+}
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 16px;
+}
+.status {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 16px 12px;
+  color: var(--fn-secondary);
+  font-size: 12px;
+}
+.tableWrap {
+  width: 100%;
+  overflow-x: auto;
+}
+.page table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.page th {
+  color: var(--fn-muted);
+  font-size: 11px;
+  font-weight: 500;
+  text-align: left;
+  background: var(--fn-soft);
+  white-space: nowrap;
+}
+.page td,
+.page th {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--fn-line);
+}
+.page td {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.page td:first-child {
+  min-width: 220px;
+  white-space: normal;
+}
+.page tr:hover td {
+  background: var(--fn-hover);
+}
+.page small {
+  display: block;
+  margin-top: 5px;
+  font-size: 11px;
+  color: var(--fn-muted);
+  overflow-wrap: anywhere;
+}
+.model {
+  border: 0;
+  padding: 0;
+  background: none;
+  text-align: left;
+  color: var(--fn-text);
+}
+.model:hover b {
+  text-decoration: underline;
+}
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 16px;
+  margin-top: auto;
+}
+.footer > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.footer > a {
+  color: var(--fn-muted);
+  font-size: 12px;
+}
+.details {
+  padding: 20px;
+}
+.details h2 {
+  font-size: 16px;
+  margin: 28px 0 8px;
+}
+.details > p {
+  line-height: 1.7;
+}
+.specs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+.specs div {
+  min-width: 0;
+}
+.specs dt {
+  color: var(--fn-muted);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+.specs dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.muted {
+  color: var(--fn-muted);
+  font-size: 12px;
+}
+.offer {
+  min-width: 0;
+}
+.offer code {
+  overflow-wrap: anywhere;
+}
+.offer pre {
+  max-height: 320px;
+  overflow: auto;
+  font-size: 12px;
+  background: var(--fn-soft);
+  padding: 12px;
+  border-radius: 8px;
+}
+.offer summary {
+  cursor: pointer;
+}
+.empty {
+  padding: 40px 16px;
+  text-align: center;
+  color: var(--fn-muted);
+}
+@media (max-width: 600px) {
+  .header {
+    flex-wrap: wrap;
+    padding: 10px 12px;
+    gap: 8px;
+  }
+  .header h1 {
+    font-size: 14px;
+  }
+  .header .search {
+    flex-basis: 50%;
+  }
+  .filters {
+    padding: 12px;
+  }
+  .details {
+    padding: 12px;
+  }
+  .footer {
+    padding: 12px;
+    gap: 6px;
+  }
+  .footer > div {
+    gap: 6px;
+  }
+}
