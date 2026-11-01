@@ -36,6 +36,10 @@ function Page() {
   const [reload, setReload] = useState(0);
   const sequence = useRef(0),
     detailSequence = useRef(0);
+  const tableScroll = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    tableScroll.current?.scrollTo({ top: 0 });
+  }, [listing]);
   const number = (v?: number) =>
     v === undefined ? "—" : new Intl.NumberFormat(locale).format(v);
   const price = (v?: number) =>
@@ -322,7 +326,14 @@ function Page() {
             )}
           </div>
           {listing?.warning && <Notice>{t("cacheWarning")}</Notice>}
-          <div className={s.tableWrap} aria-busy={loading}>
+          <div
+            ref={tableScroll}
+            className={`${s.tableWrap} ${s.catalogTable}`}
+            role="region"
+            aria-label={t("app.name")}
+            tabIndex={0}
+            aria-busy={loading}
+          >
             <table>
               <thead>
                 <tr>
@@ -365,10 +376,10 @@ function Page() {
                 ))}
               </tbody>
             </table>
+            {!loading && listing?.total === 0 && (
+              <p className={s.empty}>{t("empty")}</p>
+            )}
           </div>
-          {!loading && listing?.total === 0 && (
-            <p className={s.empty}>{t("empty")}</p>
-          )}
           <footer className={s.footer}>
             <a
               href="https://models.dev/models/"
