@@ -116,6 +116,22 @@
 .kb-board-tile:hover {
   border-color: var(--fn-border);
 }
+/* These buttons sit inside an existing surface or a colored label. */
+.kb-board-tile .kb-board-entry,
+.kb-card .kb-card-open,
+.kb-labels .kb-label-toggle,
+.kb-label-options .kb-label-toggle,
+.kb-label-row .kb-label-row-main {
+  border: 0;
+}
+.kb-board-tile .kb-board-entry:focus-visible,
+.kb-card .kb-card-open:focus-visible,
+.kb-labels .kb-label-toggle:focus-visible,
+.kb-label-options .kb-label-toggle:focus-visible,
+.kb-label-row .kb-label-row-main:focus-visible {
+  outline: 1px solid var(--fn-focus);
+  outline-offset: -1px;
+}
 .kb-board-tile .kb-board-entry {
   display: flex;
   flex-direction: column;
@@ -249,6 +265,7 @@
   gap: 8px;
   width: 100%;
   height: auto;
+  min-height: 0;
   padding: 0;
   white-space: normal;
   text-align: left;
@@ -352,6 +369,7 @@
   max-width: 100%;
   min-width: 34px;
   height: auto;
+  min-height: 0;
   padding: 0;
   border-radius: 5px;
   background: transparent;

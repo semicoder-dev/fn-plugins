@@ -35,4 +35,6 @@ bun run market:local
 
 ## GitHub CI/CD
 
+看板 0.3.1 发布准备：修复内部标题/标签多余边框并使用 SDK 0.7.1/UI 0.2.1 构建。其余应用继续保留 0.3.0 正式归档；公开状态以发行验证记录为准。
+
 PR、main 和手动 CI 执行检查、测试、四应用及行情打包、`scripts/verify-independent.ts` 仓库外冻结消费。发布流程额外运行 `scripts/check-release-dependencies.ts`，拒绝本地 SDK/UI 及 overrides；版本/tag 校验后生成归档和市场。只有推送精确发行标签才发布，手动执行仅构建候选。公开归档校验通过后切换 Pages，已有归档不覆盖，未更新应用条目保持。环境采用精确标签许可和现有审核。

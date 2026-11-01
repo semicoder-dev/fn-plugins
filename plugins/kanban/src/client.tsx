@@ -350,6 +350,7 @@ export function Kanban() {
                   >
                     <Button
                       className={cx("kb-list-title")}
+                      variant="ghost"
                       onClick={() =>
                         setDialog({
                           type: "list.rename",
@@ -371,6 +372,7 @@ export function Kanban() {
                       anchor={
                         <Button
                           size="sm"
+                          variant="ghost"
                           aria-label={t("{title}列表操作", {
                             title: list.title,
                           })}
@@ -902,6 +904,7 @@ function AddCard({
   ) : (
     <Button
       className={cx("kb-add-card")}
+      variant="ghost"
       disabled={disabled}
       data-add-list={listId}
       onClick={() => setOpen(true)}
