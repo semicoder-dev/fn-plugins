@@ -1,6 +1,6 @@
 # Fn 官方应用
 
-翻译、笔记、看板以独立 TypeScript 应用交付。宿主统一模型、窗口、UI、小组件和手机文字路由；应用管理业务与 Bun SQLite 数据。三个应用使用 SDK 0.6.0 与 Fn UI 0.1.0 的精确 npm 依赖，适用于 Fn 0.7。
+翻译、笔记、看板和模型目录以独立 TypeScript 应用交付。宿主统一模型、窗口、UI、小组件和手机文字路由；应用管理业务与 Bun SQLite 数据。四个应用使用 SDK 0.6.0 与 Fn UI 0.1.0 的精确 npm 依赖，适用于 Fn 0.7。
 
 ```sh
 bun install --frozen-lockfile --ignore-scripts
@@ -30,6 +30,6 @@ bun run market:local
 
 ## 正式发布
 
-应用独立发版，当前三个首批应用为 0.2.0，模型目录准备发布 0.2.0。`bun scripts/release.ts 0.2.0 models-dev` 验证该应用归档，保留 `release/catalog.json` 中其他应用的公开地址和摘要，生成完整市场与 `release.json`。发布前若线上市场偏离基线则停止，避免覆盖并行更新。后续发版前将已验收的线上目录同步为基线。
+应用独立发版，当前三个首批应用为 0.2.0，模型目录为 0.2.0，均已在正式市场提供。`bun scripts/release.ts 0.2.0 models-dev` 验证该应用归档，保留 `release/catalog.json` 中其他应用的公开地址和摘要，生成完整市场与 `release.json`。发布前若线上市场偏离基线则停止，避免覆盖并行更新。后续发版前将已验收的线上目录同步为基线。
 
 `models-dev-v0.2.0` 等单应用标签通过 release.yml 构建、测试、打包、创建 GitHub Release，再下载核对归档与完整公开市场后部署 Pages。`apps-v<version>` 支持统一发版，要求所有应用版本一致；GitHub Pages 环境按精确标签授权。手动工作流指定 application/version 只生成候选，不发布。安装包、市场、宿主和官网依次验收，手机正式版本单独交付。
