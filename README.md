@@ -1,6 +1,6 @@
 # Fn 官方应用
 
-翻译、笔记、看板和模型目录以独立 TypeScript 应用交付。宿主统一模型、窗口、UI、应用摘要和手机文字路由；应用管理业务与 Bun SQLite 数据。0.3.0 使用 Fn 0.8 的 hostApi 2、SDK 0.7.0 和 UI 0.2.0。宿主构建不依赖本仓。
+翻译、笔记、看板和模型目录以独立 TypeScript 应用交付。宿主统一模型、窗口、UI、应用摘要和手机文字路由；应用管理业务与 Bun SQLite 数据。公开 0.3.0 使用 Fn 0.8 的 hostApi 2、SDK 0.7.0 和 UI 0.2.0；main 开发依赖更新为 SDK 0.7.1 / UI 0.2.1，应用版本、已发布归档与市场不变。宿主构建不依赖本仓。
 
 ```sh
 bun install --frozen-lockfile --ignore-scripts

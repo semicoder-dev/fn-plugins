@@ -5,8 +5,8 @@
     "": {
       "name": "fn-plugins",
       "devDependencies": {
-        "@semicoder/fn-sdk": "0.7.0",
-        "@semicoder/fn-ui": "0.2.0",
+        "@semicoder/fn-sdk": "0.7.1",
+        "@semicoder/fn-ui": "0.2.1",
         "@types/bun": "1.4.0",
         "@types/react": "19.2.17",
         "@types/react-dom": "19.2.3",
@@ -17,9 +17,9 @@
     },
   },
   "packages": {
-    "@semicoder/fn-sdk": ["@semicoder/fn-sdk@0.7.0", "", { "dependencies": { "zod": "4.6.5" }, "peerDependencies": { "react": ">=19 <20" }, "optionalPeers": ["react"] }, "sha512-u3WeHl4oi9o8Wrh+ap8D5acI3CTukmB5iYWrK08Yfbpf3Zd0cf/r55l/mzqfPp80yYlUJ03ivOEQG6DFUtIcsQ=="],
+    "@semicoder/fn-sdk": ["@semicoder/fn-sdk@0.7.1", "", { "dependencies": { "zod": "4.6.5" }, "peerDependencies": { "react": ">=19 <20" }, "optionalPeers": ["react"] }, "sha512-5txhzsfhSK/26VmWJE7FrqbLKOg8IbGS7Ulyt7gmVayyGfh+WdLlFa5wO8R1dCPXbh2ZcgU3pXEpX7iLW3mz+w=="],
 
-    "@semicoder/fn-ui": ["@semicoder/fn-ui@0.2.0", "", { "peerDependencies": { "@semicoder/fn-sdk": "0.7.0", "react": ">=19 <20", "react-dom": ">=19 <20" } }, "sha512-KzvJBhgloR5O6ieVoxxwU/lfgKwd7n7p7PV3blCDTcMve4wziNMuJGXJxeTOklTuEj0ufIKU6ZJvQfa6Sjy9aw=="],
+    "@semicoder/fn-ui": ["@semicoder/fn-ui@0.2.1", "", { "peerDependencies": { "@semicoder/fn-sdk": "0.7.1", "react": ">=19 <20", "react-dom": ">=19 <20" } }, "sha512-IekQ23PMdic3WYBp8CvbHgM0jOzHIqURtu7qQMZLNAav/4TfstMUd3iibcHhY+akMqF7VDqpGA2CGwWroHCXEw=="],
 
     "@types/bun": ["@types/bun@1.4.0", "", { "dependencies": { "bun-types": "1.4.0" } }, "sha512-K+lZULY23vRgK/CfTjFIV+tyifaNdSMlPh9j+6mQ/cLfpOznLyAuzgV/JQysyECpkBQLVMSyvjlr2fBUSA9wFQ=="],
 
