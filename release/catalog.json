@@ -3,11 +3,11 @@
   "applications": [
     {
       "id": "fn-translate",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "name": "翻译",
       "description": "使用 ChatGPT 账号翻译文字",
-      "url": "https://github.com/semicoder-dev/fn-plugins/releases/download/apps-v0.3.0/fn-translate-0.3.0.fn.tgz",
-      "sha256": "2efc81e37623a0a6a5ef1c6413e80ac7f0d24a14e2164bfdd7789937e1eb2b2c"
+      "url": "https://github.com/semicoder-dev/fn-plugins/releases/download/translate-v0.3.1/fn-translate-0.3.1.fn.tgz",
+      "sha256": "e9fa7dcba836e3624b886b15fb79d73202d0254bac4b0f6215233451800811b5"
     },
     {
       "id": "fn-notes",
