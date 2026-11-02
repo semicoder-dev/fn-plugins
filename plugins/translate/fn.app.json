@@ -1,7 +1,7 @@
 {
   "manifestVersion": 1,
   "id": "fn-translate",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "hostApi": 2,
   "name": {
     "key": "app.name"

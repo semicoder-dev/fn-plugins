@@ -10,11 +10,12 @@
     "market:local": "bun scripts/local-market.ts",
     "fmt": "bun fmt --no-script plugins examples scripts package.json tsconfig.json",
     "verify:independent": "bun scripts/verify-independent.ts",
-    "release:check": "bun scripts/check-release-dependencies.ts"
+    "release:check": "bun scripts/check-release-dependencies.ts",
+    "verify:sdk-candidate": "bun scripts/verify-sdk-candidate.ts"
   },
   "devDependencies": {
-    "@semicoder/fn-sdk": "0.7.1",
-    "@semicoder/fn-ui": "0.2.1",
+    "@semicoder/fn-sdk": "0.8.0",
+    "@semicoder/fn-ui": "0.2.2",
     "@types/bun": "1.4.0",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",

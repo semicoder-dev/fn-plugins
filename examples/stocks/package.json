@@ -9,6 +9,6 @@
     "summary"
   ],
   "dependencies": {
-    "@semicoder/fn-sdk": "0.7.1"
+    "@semicoder/fn-sdk": "0.8.0"
   }
 }
